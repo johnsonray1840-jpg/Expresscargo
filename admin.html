@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard | Express Cargo</title>
+    <link rel="icon" type="image/png" href="images/logo-footer.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: '#0284c7',
+                            600: '#0B1F3A',
+                            700: '#071526',
+                            800: '#050f1d',
+                            900: '#03080f',
+                        },
+                        secondary: {
+                            500: '#D97706',
+                            600: '#B45309',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Socket.IO -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body class="h-full bg-[#071526] text-slate-200 font-sans flex flex-col">
+    <!-- Top Navigation Bar -->
+    <header class="bg-[#0B1F3A] border-b border-white/10 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="flex items-center gap-3">
+                        <img src="images/logo-footer.png" alt="Express Cargo" class="h-9 w-auto object-contain">
+                    </a>
+                    <span class="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary-500/20 text-primary-300 border border-primary-500/30">
+                        Admin Portal
+                    </span>
+                </div>
+
+                <!-- User Controls -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-300 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span id="userDisplayName">Super Admin</span>
+                    </div>
+                    <a href="order.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold border border-white/10 transition-all">
+                        <i class="fas fa-radar"></i>
+                        <span>Live Tracking</span>
+                    </a>
+                    <button id="logoutBtn" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/20 text-xs font-bold transition-all cursor-pointer">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <!-- Top Banner / Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Logistics Management Overview</h1>
+                <p class="text-sm text-slate-400 mt-1">Live consignment lifecycle, telemetry simulation &amp; dual-party notification engine</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="refreshBtn" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-300 transition-all cursor-pointer">
+                    <i class="fas fa-sync-alt" id="refreshIcon"></i>
+                    <span>Refresh</span>
+                </button>
+                <button type="button" onclick="openAuditLogsModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-xs font-bold text-purple-300 transition-all cursor-pointer">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Audit Logs</span>
+                </button>
+                <button type="button" id="openCreateModalBtn" onclick="openCreateModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-sky-600 hover:from-primary-600 hover:to-sky-700 text-white text-xs font-bold shadow-lg shadow-primary-500/20 transition-all hover:-translate-y-0.5 cursor-pointer">
+                    <i class="fas fa-plus"></i>
+                    <span>Create New Shipment</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div class="bg-[#0B1F3A]/80 border border-white/10 p-5 rounded-2xl shadow-xl">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Cargo</span>
+                    <span class="h-9 w-9 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-400 text-sm">
+                        <i class="fas fa-boxes"></i>
+                    </span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-white mt-2" id="statTotal">0</div>
+                <span class="text-xs text-slate-500 mt-1 block">All registered consignments</span>
+            </div>
+
+            <div class="bg-[#0B1F3A]/80 border border-white/10 p-5 rounded-2xl shadow-xl">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">In Global Transit</span>
+                    <span class="h-9 w-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400 text-sm">
+                        <i class="fas fa-plane-departure"></i>
+                    </span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-sky-400 mt-2" id="statInTransit">0</div>
+                <span class="text-xs text-slate-500 mt-1 block">Active flight &amp; ocean routes</span>
+            </div>
+
+            <div class="bg-[#0B1F3A]/80 border border-white/10 p-5 rounded-2xl shadow-xl">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Successfully Delivered</span>
+                    <span class="h-9 w-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-sm">
+                        <i class="fas fa-check-circle"></i>
+                    </span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-2" id="statDelivered">0</div>
+                <span class="text-xs text-slate-500 mt-1 block">Signed &amp; closed manifests</span>
+            </div>
+
+            <div class="bg-[#0B1F3A]/80 border border-white/10 p-5 rounded-2xl shadow-xl">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Customs / Pending</span>
+                    <span class="h-9 w-9 rounded-xl bg-secondary-500/10 flex items-center justify-center text-secondary-400 text-sm">
+                        <i class="fas fa-clock"></i>
+                    </span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-secondary-400 mt-2" id="statPending">0</div>
+                <span class="text-xs text-slate-500 mt-1 block">Clearance, paused or intake</span>
+            </div>
+        </div>
+
+        <!-- Shipments Data Table Card -->
+        <div class="bg-[#0B1F3A]/60 border border-white/10 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-xl">
+            <!-- Table Header Bar / Search / Filters -->
+            <div class="p-5 sm:p-6 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-lg font-bold text-white">Active Cargo Consignments</h2>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary-500/20 text-primary-300" id="shipmentCountBadge">0</span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="relative min-w-[220px]">
+                        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="searchInput" placeholder="Search tracking, city, client..." class="w-full pl-9 pr-3.5 py-2 bg-slate-950/60 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50">
+                    </div>
+                    <select id="statusFilter" class="bg-slate-950/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50">
+                        <option value="">All Statuses</option>
+                        <option value="in_transit">In Transit</option>
+                        <option value="out_for_delivery">Out For Delivery</option>
+                        <option value="customs_clearance">Customs Clearance</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="pending">Pending</option>
+                        <option value="paused">Paused</option>
+                        <option value="suspended">Suspended</option>
+                        <option value="confiscated">Confiscated</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table Body -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-950/80 text-slate-400 font-bold uppercase tracking-wider border-b border-white/10">
+                        <tr>
+                            <th class="py-3.5 px-4 sm:px-6">Tracking Number</th>
+                            <th class="py-3.5 px-4">Origin &rarr; Destination</th>
+                            <th class="py-3.5 px-4">Shipper &amp; Consignee</th>
+                            <th class="py-3.5 px-4">Status &amp; Progress</th>
+                            <th class="py-3.5 px-4">Estimated Delivery</th>
+                            <th class="py-3.5 px-4 sm:px-6 text-right">Actions (Full CRUD)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shipmentsTableBody" class="divide-y divide-white/5">
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-400">
+                                <i class="fas fa-spinner fa-spin text-2xl mb-2 text-primary-400 block"></i>
+                                Loading shipments...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- CREATE SHIPMENT MODAL -->
+    <div id="createModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0B1F3A] border border-white/10 w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-8">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Create New Cargo Consignment</h3>
+                    <p class="text-xs text-slate-400">Register new shipment with automatic time progression &amp; dual-party email dispatch</p>
+                </div>
+                <button type="button" onclick="closeCreateModal()" class="text-slate-400 hover:text-white p-2 text-lg cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="createShipmentForm" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Tracking Number</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="newTrackingNumber" required class="flex-1 px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white uppercase font-mono">
+                            <button type="button" onclick="document.getElementById('newTrackingNumber').value = generateTrackingNumber()" class="px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-semibold text-secondary-400 border border-white/10 cursor-pointer">Generate</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Service Type</label>
+                        <select id="newServiceType" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                            <option value="standard_express">Standard Air Express</option>
+                            <option value="ocean_freight">Ocean / Sea Freight</option>
+                            <option value="road_transport">Road Transportation</option>
+                            <option value="express_courier">Priority Courier</option>
+                            <option value="diplomatic">Diplomatic Secure Bag</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-2xl border border-white/5 space-y-2.5">
+                        <span class="text-xs font-bold text-primary-400 block uppercase flex items-center gap-1.5">
+                            <i class="fas fa-map-pin"></i> Origin (Sender)
+                        </span>
+                        <input type="text" id="newSenderName" placeholder="Sender Full Name *" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="email" id="newSenderEmail" placeholder="Sender Email (receives alerts)" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="tel" id="newSenderPhone" placeholder="Sender Phone" value="+1 234 567 8900" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="newOriginCity" placeholder="Origin City (e.g. London) *" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="newOriginCountry" placeholder="Origin Country (e.g. United Kingdom) *" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                    </div>
+
+                    <div class="bg-slate-900/60 p-4 rounded-2xl border border-white/5 space-y-2.5">
+                        <span class="text-xs font-bold text-secondary-400 block uppercase flex items-center gap-1.5">
+                            <i class="fas fa-map-marker-alt"></i> Destination (Recipient)
+                        </span>
+                        <input type="text" id="newRecipientName" placeholder="Recipient Full Name *" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="email" id="newRecipientEmail" placeholder="Recipient Email (receives alerts)" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="tel" id="newRecipientPhone" placeholder="Recipient Phone" value="+1 987 654 3210" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="newDestCity" placeholder="Destination City (e.g. New York) *" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="newDestCountry" placeholder="Destination Country (e.g. United States) *" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Transit Duration / Speed</label>
+                        <select id="newDurationPreset" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                            <option value="5m">5 Minutes (Ultra Fast Demo)</option>
+                            <option value="15m">15 Minutes (Fast Demo)</option>
+                            <option value="30m">30 Minutes (Demo)</option>
+                            <option value="1h">1 Hour (Quick Transit)</option>
+                            <option value="6h">6 Hours (Same Day Air)</option>
+                            <option value="24h" selected>24 Hours (Next Day Air)</option>
+                            <option value="48h">48 Hours (2 Days Air)</option>
+                            <option value="72h">72 Hours (3 Days Standard)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Cargo Weight (KG)</label>
+                        <input type="number" id="newWeight" value="12.5" step="0.1" required class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Initial Status</label>
+                        <select id="newStatus" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                            <option value="pending" selected>Pending / Booked</option>
+                            <option value="in_transit">In Transit (Active Flight)</option>
+                            <option value="customs_clearance">Customs Clearance</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Live ETA Preview Box -->
+                <div class="bg-primary-500/10 border border-primary-500/20 rounded-2xl p-3.5 flex items-center justify-between text-xs">
+                    <span class="text-slate-400 flex items-center gap-2">
+                        <i class="fas fa-satellite text-primary-400 animate-pulse"></i> Projected Delivery (ETA):
+                    </span>
+                    <span id="newETADisplay" class="font-mono font-bold text-primary-300">Calculating...</span>
+                    <input type="hidden" id="newETA">
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
+                    <button type="button" onclick="closeCreateModal()" class="px-5 py-2.5 rounded-xl bg-white/5 text-slate-400 hover:text-white text-xs font-bold cursor-pointer">Cancel</button>
+                    <button type="submit" id="saveShipmentBtn" class="px-6 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-xs font-bold shadow-lg shadow-primary-500/20 cursor-pointer">Save &amp; Dispatch Consignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT SHIPMENT MODAL (FULL CRUD) -->
+    <div id="editModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0B1F3A] border border-white/10 w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-8">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Edit Shipment Details</h3>
+                    <p class="text-xs text-slate-400" id="editModalSubtitle">Consignment #--</p>
+                </div>
+                <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-white p-2 text-lg cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="editShipmentForm" class="space-y-4">
+                <input type="hidden" id="editShipmentId">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Status</label>
+                        <select id="editStatus" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                            <option value="pending">Pending / Booked</option>
+                            <option value="in_transit">In Transit (Active)</option>
+                            <option value="customs_clearance">Customs Clearance</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
+                            <option value="delivered">Delivered (Signed)</option>
+                            <option value="paused">Paused / On Hold</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="confiscated">Confiscated</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Service Tier</label>
+                        <select id="editServiceType" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                            <option value="standard_express">Standard Air Express</option>
+                            <option value="ocean_freight">Ocean / Sea Freight</option>
+                            <option value="road_transport">Road Transportation</option>
+                            <option value="express_courier">Priority Courier</option>
+                            <option value="diplomatic">Diplomatic Secure Bag</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Carrier</label>
+                        <input type="text" id="editCarrier" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-2xl border border-white/5 space-y-2.5">
+                        <span class="text-xs font-bold text-primary-400 block uppercase flex items-center gap-1.5">
+                            <i class="fas fa-map-pin"></i> Origin (Shipper)
+                        </span>
+                        <input type="text" id="editSenderName" placeholder="Sender Name" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="email" id="editSenderEmail" placeholder="Sender Email" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="tel" id="editSenderPhone" placeholder="Sender Phone" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="editOriginCity" placeholder="Origin City" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="editOriginCountry" placeholder="Origin Country" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                    </div>
+
+                    <div class="bg-slate-900/60 p-4 rounded-2xl border border-white/5 space-y-2.5">
+                        <span class="text-xs font-bold text-secondary-400 block uppercase flex items-center gap-1.5">
+                            <i class="fas fa-map-marker-alt"></i> Destination (Consignee)
+                        </span>
+                        <input type="text" id="editRecipientName" placeholder="Recipient Name" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="email" id="editRecipientEmail" placeholder="Recipient Email" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="tel" id="editRecipientPhone" placeholder="Recipient Phone" class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="editDestCity" placeholder="Destination City" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                        <input type="text" id="editDestCountry" placeholder="Destination Country" required class="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-lg text-xs text-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Transit Duration (Hours)</label>
+                        <input type="number" id="editDurationHours" min="0.01" step="0.01" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Package Weight (KG)</label>
+                        <input type="number" id="editWeight" step="0.1" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Status Reason / Public Milestone Remarks</label>
+                    <textarea id="editStatusReason" rows="2" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white" placeholder="Milestone description sent to both parties..."></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
+                    <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 rounded-xl bg-white/5 text-slate-400 hover:text-white text-xs font-bold cursor-pointer">Cancel</button>
+                    <button type="submit" id="saveEditBtn" class="px-6 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-xs font-bold shadow-lg shadow-primary-500/20 cursor-pointer">Save Changes &amp; Notify Stakeholders</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRMATION MODAL (FULL CRUD) -->
+    <div id="deleteModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0B1F3A] border border-red-500/30 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 text-center">
+            <div class="h-16 w-16 rounded-full bg-red-500/10 text-red-500 border border-red-500/20 flex items-center justify-center text-2xl mx-auto">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Delete Consignment</h3>
+                <p class="text-xs text-slate-400 mt-2">
+                    Are you sure you want to permanently delete consignment <strong id="deleteModalTrNum" class="text-red-400 font-mono">--</strong>?
+                    This will delete all checkpoint logs, documents, and historical telemetry permanently.
+                </p>
+            </div>
+            <input type="hidden" id="deleteShipmentId">
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button type="button" onclick="closeDeleteModal()" class="px-5 py-2.5 rounded-xl bg-white/5 text-slate-300 hover:text-white text-xs font-bold cursor-pointer">Cancel</button>
+                <button type="button" id="confirmDeleteBtn" onclick="executeDeleteShipment()" class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-lg shadow-red-600/30 cursor-pointer">
+                    Yes, Permanently Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPDATE STATUS MODAL -->
+    <div id="statusModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0B1F3A] border border-white/10 w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Update Status &amp; Trigger Milestone Email</h3>
+                    <p class="text-xs text-slate-400" id="statusModalTrNum">Tracking: --</p>
+                </div>
+                <button type="button" id="closeStatusModalBtn" class="text-slate-400 hover:text-white p-2 text-lg cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="updateStatusForm" class="space-y-4">
+                <input type="hidden" id="statusShipmentId">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">New Status</label>
+                    <select id="updateStatusSelect" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                        <option value="in_transit">In Transit (Active)</option>
+                        <option value="customs_clearance">Customs Clearance</option>
+                        <option value="out_for_delivery">Out For Delivery</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="paused">Paused / On Hold</option>
+                        <option value="suspended">Suspended (Security Review)</option>
+                        <option value="confiscated">Confiscated</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Current Location (City/Country)</label>
+                    <input type="text" id="updateLocation" placeholder="e.g. Frankfurt Cargo Hub, Germany" class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Milestone Description (Emailed to Sender &amp; Receiver)</label>
+                    <textarea id="updateDescription" rows="2" placeholder="e.g. Consignment successfully cleared customs and boarded connecting flight." class="w-full px-3.5 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-xs text-white"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
+                    <button type="button" id="cancelStatusBtn" class="px-5 py-2.5 rounded-xl bg-white/5 text-slate-400 hover:text-white text-xs font-bold cursor-pointer">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-xs font-bold shadow-lg shadow-primary-500/20 cursor-pointer">Update &amp; Send Milestone Emails</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CHECKPOINTS MANAGEMENT MODAL -->
+    <div id="checkpointsModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0B1F3A] border border-white/10 w-full max-w-3xl rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-map-signs text-purple-400"></i> Route Checkpoints & Waypoints</h3>
+                    <p class="text-xs text-slate-400" id="cpModalSubtitle">Consignment #--</p>
+                </div>
+                <button type="button" onclick="closeCheckpointsModal()" class="text-slate-400 hover:text-white p-2 text-lg cursor-pointer"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="hidden" id="cpShipmentId">
+
+            <!-- Existing Checkpoints List -->
+            <div id="cpListContainer" class="space-y-3">
+                <div class="text-center text-slate-500 text-xs py-6"><i class="fas fa-spinner fa-spin mr-2"></i>Loading checkpoints...</div>
+            </div>
+
+            <!-- Add Checkpoint Form -->
+            <div class="border-t border-white/10 pt-5 space-y-3">
+                <h4 class="text-sm font-bold text-slate-300 flex items-center gap-2"><i class="fas fa-plus-circle text-purple-400"></i> Add New Waypoint</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" id="cpName" placeholder="Checkpoint Name (e.g. Frankfurt Hub)" class="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    <input type="text" id="cpCity" placeholder="City *" class="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    <input type="text" id="cpCountry" placeholder="Country *" class="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="cpLat" placeholder="Latitude" step="0.0001" class="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                        <input type="number" id="cpLng" placeholder="Longitude" step="0.0001" class="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" onclick="addCheckpoint()" id="addCpBtn" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-lg cursor-pointer">
+                        <i class="fas fa-plus mr-1"></i> Add Checkpoint
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENTS MANAGEMENT MODAL -->
+    <div id="docsModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0B1F3A] border border-white/10 w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-file-alt text-emerald-400"></i> Shipping Documents</h3>
+                    <p class="text-xs text-slate-400" id="docsModalSubtitle">Consignment #--</p>
+                </div>
+                <button type="button" onclick="closeDocsModal()" class="text-slate-400 hover:text-white p-2 text-lg cursor-pointer"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="hidden" id="docsShipmentId">
+
+            <!-- Existing Documents List -->
+            <div id="docsListContainer" class="space-y-3">
+                <div class="text-center text-slate-500 text-xs py-6"><i class="fas fa-spinner fa-spin mr-2"></i>Loading documents...</div>
+            </div>
+
+            <!-- Upload Document Form -->
+            <div class="border-t border-white/10 pt-5 space-y-3">
+                <h4 class="text-sm font-bold text-slate-300 flex items-center gap-2"><i class="fas fa-cloud-upload-alt text-emerald-400"></i> Upload New Document</h4>
+                <form id="uploadDocForm" enctype="multipart/form-data" class="space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="file" id="docFile" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx" class="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-xs text-white file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500/20 file:text-emerald-300">
+                        <select id="docType" class="w-full px-3 py-2 bg-slate-900 border border-white/10 rounded-xl text-xs text-white">
+                            <option value="waybill">Air Waybill</option>
+                            <option value="invoice">Commercial Invoice</option>
+                            <option value="customs">Customs Declaration</option>
+                            <option value="packing_list">Packing List</option>
+                            <option value="proof_of_delivery">Proof of Delivery</option>
+                            <option value="photo">Cargo Photo</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" id="uploadDocBtn" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-lg cursor-pointer">
+                            <i class="fas fa-upload mr-1"></i> Upload Document
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIMULATION CONTROLS MODAL -->
+    <div id="auditLogsModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0B1F3A] border border-white/10 w-full max-w-4xl rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-clipboard-list text-purple-400"></i> System Audit Logs</h3>
+                    <p class="text-xs text-slate-400">Complete record of all administrative actions</p>
+                </div>
+                <button type="button" onclick="closeAuditLogsModal()" class="text-slate-400 hover:text-white p-2 text-lg cursor-pointer"><i class="fas fa-times"></i></button>
+            </div>
+
+            <!-- Filters Row -->
+            <div class="flex flex-wrap items-center gap-3">
+                <select id="auditActionFilter" class="bg-slate-950/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                    <option value="">All Actions</option>
+                    <option value="SHIPMENT_CREATED">Shipment Created</option>
+                    <option value="SHIPMENT_UPDATED">Shipment Updated</option>
+                    <option value="SHIPMENT_DELETED">Shipment Deleted</option>
+                    <option value="STATUS_CHANGED">Status Changed</option>
+                    <option value="CHECKPOINTS_ADDED">Checkpoints Added</option>
+                    <option value="SIMULATION_CONFIGURED">Simulation Configured</option>
+                    <option value="SHIPMENT_PAUSED">Paused</option>
+                    <option value="SHIPMENT_RESUMED">Resumed</option>
+                    <option value="SHIPMENT_SUSPENDED">Suspended</option>
+                    <option value="SHIPMENT_CONFISCATED">Confiscated</option>
+                </select>
+                <input type="text" id="auditSearchInput" placeholder="Search by tracking #..." class="px-3 py-2 bg-slate-950/60 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 min-w-[180px]">
+                <button type="button" onclick="loadAuditLogs(1)" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold cursor-pointer">
+                    <i class="fas fa-search mr-1"></i> Search
+                </button>
+            </div>
+
+            <!-- Audit Logs Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-950/80 text-slate-400 font-bold uppercase tracking-wider border-b border-white/10">
+                        <tr>
+                            <th class="py-3 px-4">Timestamp</th>
+                            <th class="py-3 px-4">Action</th>
+                            <th class="py-3 px-4">Target</th>
+                            <th class="py-3 px-4">Admin</th>
+                            <th class="py-3 px-4">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditLogsTableBody" class="divide-y divide-white/5">
+                        <tr><td colspan="5" class="py-8 text-center text-slate-500">Click "Audit Logs" to load records</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between text-xs text-slate-400">
+                <span id="auditPaginationInfo">Page 1</span>
+                <div class="flex gap-2">
+                    <button type="button" id="auditPrevBtn" onclick="loadAuditLogs(currentAuditPage - 1)" disabled class="px-3 py-1.5 rounded-lg bg-white/5 text-slate-400 border border-white/10 cursor-pointer disabled:opacity-40">
+                        <i class="fas fa-chevron-left mr-1"></i> Prev
+                    </button>
+                    <button type="button" id="auditNextBtn" onclick="loadAuditLogs(currentAuditPage + 1)" disabled class="px-3 py-1.5 rounded-lg bg-white/5 text-slate-400 border border-white/10 cursor-pointer disabled:opacity-40">
+                        Next <i class="fas fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        const token = localStorage.getItem('express_cargo_token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        const user = JSON.parse(localStorage.getItem('express_cargo_user') || '{}');
+        if (user && user.name) {
+            document.getElementById('userDisplayName').textContent = user.name;
+        }
+
+        let allShipments = [];
+
+        // Tracking Number Generator
+        window.generateTrackingNumber = function() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let part1 = '', part2 = '';
+            for (let i = 0; i < 4; i++) part1 += chars.charAt(Math.floor(Math.random() * chars.length));
+            for (let i = 0; i < 4; i++) part2 += chars.charAt(Math.floor(Math.random() * chars.length));
+            return 'EXC-' + part1 + '-' + part2;
+        };
+
+        window.updateETAPreview = function() {
+            const preset = document.getElementById('newDurationPreset')?.value || '24h';
+            let durationHours = 24;
+            if (preset === '5m') durationHours = 5 / 60;
+            else if (preset === '15m') durationHours = 15 / 60;
+            else if (preset === '30m') durationHours = 30 / 60;
+            else if (preset === '1h') durationHours = 1;
+            else if (preset === '6h') durationHours = 6;
+            else if (preset === '24h') durationHours = 24;
+            else if (preset === '48h') durationHours = 48;
+            else if (preset === '72h') durationHours = 72;
+
+            const targetDate = new Date(Date.now() + durationHours * 3600 * 1000);
+            const hiddenEta = document.getElementById('newETA');
+            const displayEta = document.getElementById('newETADisplay');
+            if (hiddenEta) hiddenEta.value = targetDate.toISOString();
+            if (displayEta) {
+                displayEta.textContent = targetDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ' at ' + targetDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' (' + preset.toUpperCase() + ')';
+            }
+            return durationHours;
+        };
+
+        window.openCreateModal = function() {
+            const modal = document.getElementById('createModal');
+            if (modal) {
+                const trInput = document.getElementById('newTrackingNumber');
+                if (trInput) trInput.value = window.generateTrackingNumber();
+                window.updateETAPreview();
+                modal.classList.remove('hidden');
+            }
+        };
+
+        window.closeCreateModal = function() {
+            const modal = document.getElementById('createModal');
+            if (modal) modal.classList.add('hidden');
+        };
+
+        window.openEditModal = function(id) {
+            const s = allShipments.find(item => item._id === id || item.trackingNumber === id);
+            if (!s) return;
+
+            document.getElementById('editShipmentId').value = s._id;
+            document.getElementById('editModalSubtitle').textContent = 'Consignment #' + s.trackingNumber;
+            document.getElementById('editStatus').value = s.status || 'in_transit';
+            document.getElementById('editServiceType').value = s.serviceType || 'standard_express';
+            document.getElementById('editCarrier').value = s.carrier || 'Express Cargo Global';
+            
+            document.getElementById('editSenderName').value = s.sender?.name || '';
+            document.getElementById('editSenderEmail').value = s.sender?.email || '';
+            document.getElementById('editSenderPhone').value = s.sender?.phone || '';
+            document.getElementById('editOriginCity').value = s.origin?.city || '';
+            document.getElementById('editOriginCountry').value = s.origin?.country || '';
+
+            document.getElementById('editRecipientName').value = s.recipient?.name || '';
+            document.getElementById('editRecipientEmail').value = s.recipient?.email || '';
+            document.getElementById('editRecipientPhone').value = s.recipient?.phone || '';
+            document.getElementById('editDestCity').value = s.destination?.city || '';
+            document.getElementById('editDestCountry').value = s.destination?.country || '';
+
+            document.getElementById('editDurationHours').value = s.durationHours || 24;
+            
+            let weightVal = 12.5;
+            if (s.packages && s.packages[0]) {
+                weightVal = (typeof s.packages[0].weight === 'object' ? s.packages[0].weight.value : s.packages[0].weight) || 12.5;
+            }
+            document.getElementById('editWeight').value = weightVal;
+            document.getElementById('editStatusReason').value = s.statusReason || '';
+
+            document.getElementById('editModal').classList.remove('hidden');
+        };
+
+        window.closeEditModal = function() {
+            document.getElementById('editModal').classList.add('hidden');
+        };
+
+        window.openDeleteModal = function(id, trNum) {
+            document.getElementById('deleteShipmentId').value = id;
+            document.getElementById('deleteModalTrNum').textContent = trNum;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        };
+
+        window.closeDeleteModal = function() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        };
+
+        window.executeDeleteShipment = async function() {
+            const id = document.getElementById('deleteShipmentId').value;
+            const btn = document.getElementById('confirmDeleteBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Deleting...';
+
+            try {
+                const res = await fetch('/api/shipments/' + id, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeDeleteModal();
+                    loadShipments();
+                } else {
+                    alert('Failed to delete shipment: ' + (data.message || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Connection error deleting shipment.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Yes, Permanently Delete';
+            }
+        };
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('express_cargo_token');
+            localStorage.removeItem('express_cargo_user');
+            window.location.href = 'login.html';
+        });
+
+        // Fetch Dashboard Shipments
+        async function loadShipments() {
+            const refreshIcon = document.getElementById('refreshIcon');
+            if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+            try {
+                const res = await fetch('/api/shipments', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (res.status === 401 || res.status === 403) {
+                    localStorage.removeItem('express_cargo_token');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const data = await res.json();
+                if (data && data.success) {
+                    if (data.data && Array.isArray(data.data.shipments)) {
+                        allShipments = data.data.shipments;
+                    } else if (Array.isArray(data.data)) {
+                        allShipments = data.data;
+                    } else {
+                        allShipments = [];
+                    }
+                } else {
+                    allShipments = [];
+                }
+            } catch (err) {
+                console.error('Error loading shipments:', err);
+                allShipments = [];
+            } finally {
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                renderStats(allShipments);
+                renderTable(allShipments);
+            }
+        }
+
+        function renderStats(shipments) {
+            const list = Array.isArray(shipments) ? shipments : [];
+            document.getElementById('statTotal').textContent = list.length;
+            document.getElementById('statInTransit').textContent = list.filter(s => s.status === 'in_transit' || s.status === 'out_for_delivery' || s.status === 'active').length;
+            document.getElementById('statDelivered').textContent = list.filter(s => s.status === 'delivered').length;
+            document.getElementById('statPending').textContent = list.filter(s => ['pending', 'paused', 'on_hold', 'customs_clearance'].includes(s.status)).length;
+            document.getElementById('shipmentCountBadge').textContent = list.length;
+        }
+
+        function getStatusBadge(status) {
+            switch((status || '').toLowerCase()) {
+                case 'delivered': return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Delivered</span>';
+                case 'out_for_delivery': return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Out for Delivery</span>';
+                case 'in_transit':
+                case 'active': return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20">In Transit</span>';
+                case 'customs_clearance': return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">Customs</span>';
+                case 'paused':
+                case 'on_hold': return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Paused</span>';
+                case 'suspended': return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-500/10 text-orange-400 border border-orange-500/20">Suspended</span>';
+                case 'confiscated': return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/10 text-red-400 border border-red-500/20">Confiscated</span>';
+                default: return '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-500/10 text-slate-300 border border-slate-500/20">' + (status || 'Created') + '</span>';
+            }
+        }
+
+        function renderTable(shipments) {
+            const tbody = document.getElementById('shipmentsTableBody');
+            tbody.innerHTML = '';
+
+            const list = Array.isArray(shipments) ? shipments : [];
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filter = document.getElementById('statusFilter').value;
+
+            const filtered = list.filter(s => {
+                const matchSearch = !search || 
+                    (s.trackingNumber && s.trackingNumber.toLowerCase().includes(search)) ||
+                    (s.origin?.city && s.origin.city.toLowerCase().includes(search)) ||
+                    (s.destination?.city && s.destination.city.toLowerCase().includes(search)) ||
+                    (s.sender?.name && s.sender.name.toLowerCase().includes(search)) ||
+                    (s.recipient?.name && s.recipient.name.toLowerCase().includes(search));
+                const matchFilter = !filter || s.status === filter;
+                return matchSearch && matchFilter;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="py-12 text-center text-slate-400 font-medium">No cargo records found. Click <b>"Create New Shipment"</b> to dispatch your first consignment!</td></tr>';
+                return;
+            }
+
+            filtered.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-white/[0.02] transition-colors';
+                const progress = Math.min(100, Math.max(0, s.progressPercentage || 0));
+                const eta = s.adminETA || s.systemETA || s.expectedDeliveryAt || s.estimatedDeliveryDate;
+                const etaFormatted = eta ? new Date(eta).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '--';
+
+                tr.innerHTML = `
+                    <td class="py-4 px-4 sm:px-6">
+                        <a href="order.html?tracking_number=${encodeURIComponent(s.trackingNumber)}" target="_blank" class="font-bold text-primary-400 hover:text-primary-300 hover:underline">
+                            ${s.trackingNumber}
+                        </a>
+                        <span class="block text-[10px] text-slate-500 font-mono mt-0.5">${(s.serviceType || 'Standard').toUpperCase()}</span>
+                    </td>
+                    <td class="py-4 px-4">
+                        <span class="font-semibold text-white">${s.origin?.city || 'Origin'}</span> &rarr; <span class="font-semibold text-white">${s.destination?.city || 'Dest'}</span>
+                        <span class="block text-[10px] text-slate-400">${s.destination?.country || ''}</span>
+                    </td>
+                    <td class="py-4 px-4 text-slate-300">
+                        <span class="font-medium text-white block">${s.recipient?.name || 'Consignee'}</span>
+                        <span class="text-[10px] text-slate-500 block">From: ${s.sender?.name || 'Shipper'}</span>
+                    </td>
+                    <td class="py-4 px-4">
+                        <div class="flex items-center gap-2">
+                            ${getStatusBadge(s.status)}
+                            <span class="text-[10px] font-bold text-slate-400">${progress}%</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4 font-semibold text-slate-300">
+                        ${etaFormatted}
+                    </td>
+                    <td class="py-4 px-4 sm:px-6 text-right">
+                        <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                            <button onclick="openEditModal('${s._id}')" title="Edit Full Details" class="px-2.5 py-1 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/20 text-xs font-bold transition-all cursor-pointer">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </button>
+                            <button onclick="openStatusModal('${s._id}', '${s.trackingNumber}', '${s.status}')" title="Update Milestone" class="px-2.5 py-1 rounded-lg bg-primary-500/10 hover:bg-primary-500/20 text-primary-300 border border-primary-500/20 text-xs font-bold transition-all cursor-pointer">
+                                Status
+                            </button>
+                            <button onclick="openCheckpointsModal('${s._id}', '${s.trackingNumber}')" title="Manage Route Checkpoints" class="px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 text-xs font-bold transition-all cursor-pointer">
+                                <i class="fas fa-map-signs mr-1"></i> Waypoints
+                            </button>
+                            <button onclick="openDocsModal('${s._id}', '${s.trackingNumber}')" title="Manage Documents" class="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/20 text-xs font-bold transition-all cursor-pointer">
+                                <i class="fas fa-file-alt mr-1"></i> Docs
+                            </button>
+                            ${s.status === 'paused' || (s.pauseDetails && s.pauseDetails.isPaused) ? `<button onclick="triggerAction('${s._id}', 'resume', 'Transit Resumed')" title="Resume Operations" class="px-2.5 py-1 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-400 border border-green-500/20 text-xs font-bold transition-all cursor-pointer"><i class="fas fa-play mr-1"></i> Resume</button>` : ''}
+                            ${s.status === 'suspended' ? `<button onclick="triggerAction('${s._id}', 'unsuspend', 'Transit Resumed')" title="Clear Suspension" class="px-2.5 py-1 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-400 border border-green-500/20 text-xs font-bold transition-all cursor-pointer"><i class="fas fa-unlock mr-1"></i> Unsuspend</button>` : ''}
+                            ${s.status === 'confiscated' ? `<button onclick="triggerAction('${s._id}', 'unconfiscate', 'Transit Resumed')" title="Release Confiscation" class="px-2.5 py-1 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-400 border border-green-500/20 text-xs font-bold transition-all cursor-pointer"><i class="fas fa-check-circle mr-1"></i> Release</button>` : ''}
+                            ${!['paused', 'suspended', 'confiscated', 'delivered'].includes(s.status) && !(s.pauseDetails && s.pauseDetails.isPaused) ? `
+                            <button onclick="startAutoSimulate('${s._id}')" title="Start Automated Time Simulation" class="px-2.5 py-1 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 text-xs font-bold transition-all cursor-pointer">
+                                <i class="fas fa-rocket mr-1"></i> Start
+                            </button>
+                            <button onclick="triggerAction('${s._id}', 'pause')" title="Place on Hold" class="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 text-xs font-bold transition-all cursor-pointer"><i class="fas fa-pause"></i> Hold</button>
+                            <button onclick="triggerAction('${s._id}', 'suspend')" title="Suspend Transit" class="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-bold transition-all cursor-pointer"><i class="fas fa-ban"></i> Suspend</button>
+                            <button onclick="triggerAction('${s._id}', 'confiscate')" title="Confiscate" class="px-2.5 py-1 rounded-lg bg-red-600/20 hover:bg-red-600/40 text-red-300 border border-red-600/30 text-xs font-bold transition-all cursor-pointer"><i class="fas fa-gavel"></i> Seize</button>
+                            ` : ''}
+                            <a href="order.html?tracking_number=${encodeURIComponent(s.trackingNumber)}" target="_blank" title="Live Radar Track" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold transition-all">
+                                Radar
+                            </a>
+                            <button onclick="openDeleteModal('${s._id}', '${s.trackingNumber}')" title="Delete Consignment" class="px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-bold transition-all cursor-pointer">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Search & Filter Listeners
+        document.getElementById('searchInput').addEventListener('input', () => renderTable(allShipments));
+        document.getElementById('statusFilter').addEventListener('change', () => renderTable(allShipments));
+        document.getElementById('refreshBtn').addEventListener('click', loadShipments);
+
+        const durationPresetEl = document.getElementById('newDurationPreset');
+        if (durationPresetEl) {
+            durationPresetEl.addEventListener('change', window.updateETAPreview);
+        }
+
+        // Handle Create Shipment Submission
+        document.getElementById('createShipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const saveBtn = document.getElementById('saveShipmentBtn');
+            const origBtnText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving & Dispatching...';
+
+            const originCity = document.getElementById('newOriginCity').value.trim();
+            const originCountry = document.getElementById('newOriginCountry').value.trim();
+            const destCity = document.getElementById('newDestCity').value.trim();
+            const destCountry = document.getElementById('newDestCountry').value.trim();
+            const durationHours = window.updateETAPreview();
+            const estimatedDeliveryDate = document.getElementById('newETA').value;
+
+            const payload = {
+                trackingNumber: document.getElementById('newTrackingNumber').value.trim().toUpperCase(),
+                serviceType: document.getElementById('newServiceType').value,
+                status: document.getElementById('newStatus').value,
+                sender: {
+                    name: document.getElementById('newSenderName').value.trim(),
+                    email: document.getElementById('newSenderEmail').value.trim() || 'sender@example.com',
+                    phone: document.getElementById('newSenderPhone').value.trim() || '+1 234 567 8900',
+                    address: originCity + ', ' + originCountry
+                },
+                recipient: {
+                    name: document.getElementById('newRecipientName').value.trim(),
+                    email: document.getElementById('newRecipientEmail').value.trim() || 'recipient@example.com',
+                    phone: document.getElementById('newRecipientPhone').value.trim() || '+1 987 654 3210',
+                    address: destCity + ', ' + destCountry
+                },
+                origin: {
+                    address: originCity + ', ' + originCountry,
+                    city: originCity,
+                    country: originCountry
+                },
+                destination: {
+                    address: destCity + ', ' + destCountry,
+                    city: destCity,
+                    country: destCountry
+                },
+                package: {
+                    description: 'Express International Air Cargo',
+                    weight: {
+                        value: Number(document.getElementById('newWeight').value) || 12.5,
+                        unit: 'kg'
+                    },
+                    quantity: 1
+                },
+                estimatedDeliveryDate: estimatedDeliveryDate,
+                durationHours: durationHours
+            };
+
+            try {
+                const res = await fetch('/api/shipments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeCreateModal();
+                    document.getElementById('createShipmentForm').reset();
+                    loadShipments();
+                } else {
+                    const errMsg = (data.error && typeof data.error === 'object')
+                        ? (data.error.message || JSON.stringify(data.error))
+                        : (data.error || data.message || 'Validation or server error occurred');
+                    alert('Error creating shipment: ' + errMsg);
+                }
+            } catch (err) {
+                alert('Connection error. Please try again.');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = origBtnText;
+            }
+        });
+
+        // Handle Edit Shipment Submission (PUT /api/shipments/:id)
+        document.getElementById('editShipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const saveBtn = document.getElementById('saveEditBtn');
+            const origText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+
+            const id = document.getElementById('editShipmentId').value;
+            const originCity = document.getElementById('editOriginCity').value.trim();
+            const originCountry = document.getElementById('editOriginCountry').value.trim();
+            const destCity = document.getElementById('editDestCity').value.trim();
+            const destCountry = document.getElementById('editDestCountry').value.trim();
+
+            const payload = {
+                status: document.getElementById('editStatus').value,
+                serviceType: document.getElementById('editServiceType').value,
+                carrier: document.getElementById('editCarrier').value.trim(),
+                durationHours: Number(document.getElementById('editDurationHours').value) || 24,
+                weight: Number(document.getElementById('editWeight').value) || 12.5,
+                statusReason: document.getElementById('editStatusReason').value.trim(),
+                sender: {
+                    name: document.getElementById('editSenderName').value.trim(),
+                    email: document.getElementById('editSenderEmail').value.trim(),
+                    phone: document.getElementById('editSenderPhone').value.trim(),
+                    address: originCity + ', ' + originCountry
+                },
+                recipient: {
+                    name: document.getElementById('editRecipientName').value.trim(),
+                    email: document.getElementById('editRecipientEmail').value.trim(),
+                    phone: document.getElementById('editRecipientPhone').value.trim(),
+                    address: destCity + ', ' + destCountry
+                },
+                origin: {
+                    city: originCity,
+                    country: originCountry,
+                    address: originCity + ', ' + originCountry
+                },
+                destination: {
+                    city: destCity,
+                    country: destCountry,
+                    address: destCity + ', ' + destCountry
+                }
+            };
+
+            try {
+                const res = await fetch('/api/shipments/' + id, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeEditModal();
+                    loadShipments();
+                } else {
+                    alert('Error updating shipment: ' + (data.message || 'Validation error'));
+                }
+            } catch (err) {
+                alert('Connection error saving edits.');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = origText;
+            }
+        });
+
+        // Status Modal Handlers
+        const statusModal = document.getElementById('statusModal');
+        window.openStatusModal = function(id, trNum, currentStatus) {
+            document.getElementById('statusShipmentId').value = id;
+            document.getElementById('statusModalTrNum').textContent = 'Tracking: ' + trNum;
+            document.getElementById('updateStatusSelect').value = currentStatus || 'in_transit';
+            statusModal.classList.remove('hidden');
+        };
+        document.getElementById('closeStatusModalBtn').addEventListener('click', () => statusModal.classList.add('hidden'));
+        document.getElementById('cancelStatusBtn').addEventListener('click', () => statusModal.classList.add('hidden'));
+
+        // Handle Quick Status Form Submission
+        document.getElementById('updateStatusForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('statusShipmentId').value;
+            const newStatus = document.getElementById('updateStatusSelect').value;
+            const location = document.getElementById('updateLocation').value.trim();
+            const description = document.getElementById('updateDescription').value.trim();
+
+            try {
+                const res = await fetch('/api/shipments/' + id + '/status', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        status: newStatus,
+                        locationName: location || undefined,
+                        location: location || undefined,
+                        description: description || 'Consignment milestone updated by logistics dispatch controller.'
+                    })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    statusModal.classList.add('hidden');
+                    loadShipments();
+                } else {
+                    alert('Error updating status: ' + (data.message || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Connection error updating status.');
+            }
+        });
+
+        // Real-time Socket.IO updates
+        if (typeof io !== 'undefined') {
+            try {
+                const socket = io();
+                socket.on('shipment:updated', () => loadShipments());
+                socket.on('shipment:created', () => loadShipments());
+                socket.on('shipment:deleted', () => loadShipments());
+                socket.on('location:update', () => loadShipments());
+            } catch(e) {}
+        }
+
+        // Initial Load
+        loadShipments();
+
+        // ============================================================
+        // CHECKPOINTS MANAGEMENT
+        // ============================================================
+        window.openCheckpointsModal = function(id, trNum) {
+            document.getElementById('cpShipmentId').value = id;
+            document.getElementById('cpModalSubtitle').textContent = 'Consignment #' + trNum;
+            document.getElementById('checkpointsModal').classList.remove('hidden');
+            loadCheckpoints(id);
+        };
+        window.closeCheckpointsModal = function() {
+            document.getElementById('checkpointsModal').classList.add('hidden');
+        };
+
+        async function loadCheckpoints(id) {
+            const container = document.getElementById('cpListContainer');
+            container.innerHTML = '<div class="text-center text-slate-500 text-xs py-6"><i class="fas fa-spinner fa-spin mr-2"></i>Loading...</div>';
+            try {
+                const res = await fetch('/api/shipments/' + id + '/checkpoints', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                const checkpoints = data.data || [];
+                if (checkpoints.length === 0) {
+                    container.innerHTML = '<div class="text-center text-slate-500 text-xs py-6"><i class="fas fa-map-marker-alt mr-2"></i>No checkpoints added yet. Add waypoints below.</div>';
+                    return;
+                }
+                container.innerHTML = checkpoints.sort((a, b) => (a.sequenceOrder || 0) - (b.sequenceOrder || 0)).map((cp, i) => `
+                    <div class="bg-slate-900/60 border border-white/5 rounded-xl p-3 flex items-center justify-between group">
+                        <div class="flex items-center gap-3">
+                            <span class="h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold ${cp.status === 'reached' || cp.status === 'departed' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/5 text-slate-400 border border-white/10'}">${cp.sequenceOrder || i + 1}</span>
+                            <div>
+                                <span class="text-white font-bold text-xs">${cp.checkpointName || cp.city}</span>
+                                <span class="text-[10px] text-slate-400 block">${cp.city}, ${cp.country} &bull; ${cp.coordinates ? cp.coordinates.lat.toFixed(2) + '°, ' + cp.coordinates.lng.toFixed(2) + '°' : 'N/A'}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${cp.status === 'reached' ? 'bg-emerald-500/20 text-emerald-400' : cp.status === 'departed' ? 'bg-sky-500/20 text-sky-400' : cp.status === 'in_transit' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/5 text-slate-500'}">${(cp.status || 'pending').toUpperCase()}</span>
+                            <button onclick="deleteCheckpoint('${id}', '${cp._id}')" class="opacity-0 group-hover:opacity-100 px-2 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs cursor-pointer transition-all" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = '<div class="text-center text-red-400 text-xs py-6">Failed to load checkpoints.</div>';
+            }
+        }
+
+        window.addCheckpoint = async function() {
+            const id = document.getElementById('cpShipmentId').value;
+            const name = document.getElementById('cpName').value.trim();
+            const city = document.getElementById('cpCity').value.trim();
+            const country = document.getElementById('cpCountry').value.trim();
+            const lat = parseFloat(document.getElementById('cpLat').value) || 0;
+            const lng = parseFloat(document.getElementById('cpLng').value) || 0;
+            if (!city || !country) return alert('City and Country are required.');
+
+            const btn = document.getElementById('addCpBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Adding...';
+
+            try {
+                const res = await fetch('/api/shipments/' + id + '/checkpoints', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({
+                        checkpointName: name || city + ' Hub',
+                        city, country,
+                        coordinates: { lat, lng }
+                    })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    document.getElementById('cpName').value = '';
+                    document.getElementById('cpCity').value = '';
+                    document.getElementById('cpCountry').value = '';
+                    document.getElementById('cpLat').value = '';
+                    document.getElementById('cpLng').value = '';
+                    loadCheckpoints(id);
+                } else {
+                    alert('Error: ' + (data.error || data.message || 'Failed'));
+                }
+            } catch (err) {
+                alert('Connection error adding checkpoint.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-plus mr-1"></i> Add Checkpoint';
+            }
+        };
+
+        window.deleteCheckpoint = async function(shipmentId, cpId) {
+            if (!confirm('Delete this checkpoint?')) return;
+            try {
+                const res = await fetch('/api/shipments/' + shipmentId + '/checkpoints/' + cpId, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (res.ok) loadCheckpoints(shipmentId);
+                else alert('Failed to delete checkpoint.');
+            } catch (err) {
+                alert('Connection error.');
+            }
+        };
+
+        // ============================================================
+        // DOCUMENTS MANAGEMENT
+        // ============================================================
+        window.openDocsModal = function(id, trNum) {
+            document.getElementById('docsShipmentId').value = id;
+            document.getElementById('docsModalSubtitle').textContent = 'Consignment #' + trNum;
+            document.getElementById('docsModal').classList.remove('hidden');
+            loadDocuments(id);
+        };
+        window.closeDocsModal = function() {
+            document.getElementById('docsModal').classList.add('hidden');
+        };
+
+        async function loadDocuments(id) {
+            const container = document.getElementById('docsListContainer');
+            container.innerHTML = '<div class="text-center text-slate-500 text-xs py-6"><i class="fas fa-spinner fa-spin mr-2"></i>Loading...</div>';
+            try {
+                const res = await fetch('/api/shipments/' + id + '/documents', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                const docs = data.data || [];
+                if (docs.length === 0) {
+                    container.innerHTML = '<div class="text-center text-slate-500 text-xs py-6"><i class="fas fa-folder-open mr-2"></i>No documents uploaded yet.</div>';
+                    return;
+                }
+                container.innerHTML = docs.map(doc => {
+                    const icon = doc.fileType === 'pdf' ? 'fa-file-pdf text-red-400' : doc.fileType === 'image' ? 'fa-file-image text-sky-400' : 'fa-file text-slate-400';
+                    return `
+                    <div class="bg-slate-900/60 border border-white/5 rounded-xl p-3 flex items-center justify-between group">
+                        <div class="flex items-center gap-3">
+                            <i class="fas ${icon} text-lg"></i>
+                            <div>
+                                <span class="text-white font-bold text-xs">${doc.originalName || doc.documentType || 'Document'}</span>
+                                <span class="text-[10px] text-slate-400 block">${(doc.documentType || 'other').replace(/_/g, ' ').toUpperCase()} &bull; ${doc.createdAt ? new Date(doc.createdAt).toLocaleDateString() : ''}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="${doc.url || doc.secureUrl || '#'}" target="_blank" class="px-2.5 py-1 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 text-xs font-bold cursor-pointer"><i class="fas fa-external-link-alt mr-1"></i>View</a>
+                            <button onclick="deleteDocument('${id}', '${doc._id}')" class="opacity-0 group-hover:opacity-100 px-2 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs cursor-pointer transition-all" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                container.innerHTML = '<div class="text-center text-red-400 text-xs py-6">Failed to load documents.</div>';
+            }
+        }
+
+        document.getElementById('uploadDocForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('docsShipmentId').value;
+            const fileInput = document.getElementById('docFile');
+            const docType = document.getElementById('docType').value;
+            if (!fileInput.files.length) return alert('Please select a file.');
+
+            const btn = document.getElementById('uploadDocBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Uploading...';
+
+            const formData = new FormData();
+            formData.append('document', fileInput.files[0]);
+            formData.append('documentType', docType);
+
+            try {
+                const res = await fetch('/api/shipments/' + id + '/documents', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    fileInput.value = '';
+                    loadDocuments(id);
+                } else {
+                    alert('Upload error: ' + (data.error || data.message || 'Failed'));
+                }
+            } catch (err) {
+                alert('Connection error uploading document.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-upload mr-1"></i> Upload Document';
+            }
+        });
+
+        window.deleteDocument = async function(shipmentId, docId) {
+            if (!confirm('Delete this document permanently?')) return;
+            try {
+                const res = await fetch('/api/shipments/' + shipmentId + '/documents/' + docId, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (res.ok) loadDocuments(shipmentId);
+                else alert('Failed to delete document.');
+            } catch (err) {
+                alert('Connection error.');
+            }
+        };
+        window.startAutoSimulate = async function(id) {
+            if (!confirm('Start automated time-based simulation? This will set status to In Transit and start the progression clock immediately.')) return;
+            try {
+                const res = await fetch('/api/shipments/' + id + '/start-auto-simulation', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert('Simulation kick-started successfully!');
+                    loadShipments();
+                } else {
+                    alert('Error: ' + (data.error || data.message || 'Failed to start'));
+                }
+            } catch (err) {
+                alert('Connection error starting simulation.');
+            }
+        };
+
+        window.triggerAction = async function(id, action, resumeStatus) {
+            const reasons = {
+                'pause': 'Hold parcel temporarily for manual administrative review.',
+                'suspend': 'Official transit suspension pending security clearance.',
+                'confiscate': 'Official confiscation by Border Customs & Regulatory Enforcement.',
+                'resume': 'Hold lifted. Transit cleared to resume.',
+                'unsuspend': 'Suspension cleared. Transit operations restored.',
+                'unconfiscate': 'Confiscation order fully rescinded. Transit cleared.'
+            };
+            
+            const titles = {
+                'pause': 'Place on Hold',
+                'suspend': 'Suspend Transit',
+                'confiscate': 'Confiscate Shipment',
+                'resume': 'Resume Transit',
+                'unsuspend': 'Clear Suspension',
+                'unconfiscate': 'Release Confiscation'
+            };
+
+            const defaultReason = reasons[action];
+            const reason = prompt(`Enter reason/notes for [${titles[action]}]:`, defaultReason);
+            if (reason === null) return; // Cancelled by user
+
+            const payload = {};
+            if (action.startsWith('un') || action === 'resume') {
+                payload.notes = reason || defaultReason;
+                if (resumeStatus) payload.resumeStatus = 'in_transit'; // Default back to in_transit
+            } else {
+                payload.reason = reason || defaultReason;
+                payload.customerVisible = true;
+                if (action === 'confiscate') payload.confiscatingAuthority = 'Border Customs & Regulatory Enforcement';
+            }
+
+            try {
+                const res = await fetch('/api/shipments/' + id + '/' + action, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token 
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert(`Action [${titles[action]}] successfully applied.`);
+                    loadShipments();
+                } else {
+                    alert('Error: ' + (data.error || data.message || 'Action failed'));
+                }
+            } catch (err) {
+                alert('Connection error while executing action.');
+            }
+        };
+
+        // ============================================================
+        // AUDIT LOGS VIEWER
+        // ============================================================
+        let currentAuditPage = 1;
+
+        window.openAuditLogsModal = function() {
+            document.getElementById('auditLogsModal').classList.remove('hidden');
+            loadAuditLogs(1);
+        };
+        window.closeAuditLogsModal = function() {
+            document.getElementById('auditLogsModal').classList.add('hidden');
+        };
+
+        window.loadAuditLogs = async function(page) {
+            if (page < 1) return;
+            currentAuditPage = page;
+            const tbody = document.getElementById('auditLogsTableBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500"><i class="fas fa-spinner fa-spin mr-2"></i>Loading audit logs...</td></tr>';
+
+            const action = document.getElementById('auditActionFilter').value;
+            const search = document.getElementById('auditSearchInput').value.trim();
+            let url = '/api/admin/audit-logs?page=' + page + '&limit=15';
+            if (action) url += '&action=' + action;
+            if (search) url += '&resourceId=' + encodeURIComponent(search);
+
+            try {
+                const res = await fetch(url, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                const logs = data.data || [];
+                const pagination = data.pagination || {};
+
+                document.getElementById('auditPaginationInfo').textContent =
+                    'Page ' + (pagination.page || 1) + ' of ' + (pagination.pages || 1) + ' (' + (pagination.total || 0) + ' records)';
+                document.getElementById('auditPrevBtn').disabled = (pagination.page || 1) <= 1;
+                document.getElementById('auditNextBtn').disabled = (pagination.page || 1) >= (pagination.pages || 1);
+
+                if (logs.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500">No audit logs found.</td></tr>';
+                    return;
+                }
+
+                function getActionBadge(action) {
+                    const colors = {
+                        'SHIPMENT_CREATED': 'bg-emerald-500/10 text-emerald-400',
+                        'SHIPMENT_UPDATED': 'bg-sky-500/10 text-sky-400',
+                        'SHIPMENT_DELETED': 'bg-red-500/10 text-red-400',
+                        'STATUS_CHANGED': 'bg-amber-500/10 text-amber-400',
+                        'CHECKPOINTS_ADDED': 'bg-purple-500/10 text-purple-400',
+                        'SHIPMENT_PAUSED': 'bg-orange-500/10 text-orange-400',
+                        'SHIPMENT_RESUMED': 'bg-sky-500/10 text-sky-400',
+                        'SHIPMENT_SUSPENDED': 'bg-red-500/10 text-red-400',
+                        'SHIPMENT_CONFISCATED': 'bg-red-500/10 text-red-400',
+                    };
+                    const cls = colors[action] || 'bg-slate-500/10 text-slate-400';
+                    return '<span class="px-2 py-0.5 rounded text-[10px] font-bold ' + cls + '">' + (action || 'UNKNOWN') + '</span>';
+                }
+
+                tbody.innerHTML = logs.map(log => `
+                    <tr class="hover:bg-white/[0.02]">
+                        <td class="py-3 px-4 font-mono text-slate-400">${log.timestamp ? new Date(log.timestamp).toLocaleString() : '--'}</td>
+                        <td class="py-3 px-4">${getActionBadge(log.action)}</td>
+                        <td class="py-3 px-4 font-mono text-white font-bold">${log.targetId || log.resourceId || '--'}</td>
+                        <td class="py-3 px-4 text-slate-300">${log.adminEmail || log.userEmail || (log.admin && log.admin.email) || '--'}</td>
+                        <td class="py-3 px-4 text-slate-500 max-w-[200px] truncate">${log.reason || (log.details ? JSON.stringify(log.details).substring(0, 60) : '--')}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-red-400">Failed to load audit logs.</td></tr>';
+            }
+        };
+    </script>
+</body>
+</html>

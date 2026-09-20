@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US" class="scroll-smooth">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+     <meta name="csrf-token" content="zChd3ONCIMySk7EdtJJ66SPogbcQrJU9e2Ui5VqJ">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="Express Cargo is a global logistics service provider offering premium shipping, courier, and tracking services worldwide." />
+    <meta name="keywords" content="logistics, shipping, freight, courier, transport, global delivery, package tracking" />
+    <meta name="author" content="Express Cargo" />
+    <meta name="robots" content="index, follow" />
+    <meta name="google-site-verification" content="" />
+    <link href="images/wjXOlIaohcqn62UI4e0nXaIQdcTHyC2S9TnQ7eOc.png" rel="shortcut icon">
+    <title>Welcome to Express Cargo - Premium Global Shipping Solutions</title>
+
+    <!-- Instant preloader: first paint before fonts/Tailwind/Alpine -->
+    <link rel="preload" as="image" href="images/earth-globe-loader.webp" type="image/webp">
+    <style>
+        #preloader.earth-preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            margin: 0;
+        }
+        .earth-preloader__stage {
+            position: relative;
+            width: min(220px, 48vw);
+            height: min(220px, 48vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .earth-preloader__glow {
+            position: absolute;
+            inset: 10%;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(11, 31, 58, 0.10) 0%, rgba(11, 31, 58, 0) 68%);
+            filter: blur(10px);
+        }
+        .earth-preloader__globe {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: earth-spin 12s linear infinite;
+            will-change: transform;
+            -webkit-user-drag: none;
+            user-select: none;
+            filter: drop-shadow(0 16px 28px rgba(11, 31, 58, 0.16));
+        }
+        .earth-preloader__label {
+            margin-top: 1.75rem;
+            text-align: center;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            padding: 0 1rem;
+        }
+        .earth-preloader__brand {
+            display: block;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            color: #0B1F3A;
+            margin-bottom: 0.3rem;
+        }
+        .earth-preloader__status {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #64748b;
+            letter-spacing: 0.02em;
+        }
+        @keyframes  earth-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .earth-preloader__globe { animation: none !important; }
+        }
+    </style>
+
+    <!-- Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+
+    <!-- Heroicons -->
+    <script src="https://unpkg.com/heroicons@2.0.16/24/outline/index.js" type="module"></script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'Manrope', 'sans-serif'],
+                        inter: ['Manrope', 'sans-serif'],
+                    },
+                    colors: {
+    primary: {
+        50: '#eef3f8',
+        100: '#d9e4ef',
+        200: '#b4c9de',
+        300: '#84a5c4',
+        400: '#557eaa',
+        500: '#3a628c',
+        600: '#0B1F3A',
+        700: '#091930',
+        800: '#071326',
+        900: '#040c18',
+    },
+    secondary: {
+        50: '#fff7ed',
+        100: '#ffedd5',
+        200: '#fed7aa',
+        300: '#fdba74',
+        400: '#fb923c',
+        500: '#f97316',
+        600: '#EA580C',
+        700: '#c2410c',
+        800: '#9a3412',
+        900: '#7c2d12',
+    }
+},
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                        'bounce-slow': 'bounce 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Alpine.js x-cloak directive */
+        [x-cloak] {
+            display: none !important;
+        }
+
+
+        body {
+            top: 0px !important;
+        }
+
+        .skiptranslate iframe {
+            visibility: hidden !important;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        a, button, input, .transition-colors, .transition-all, .transition-transform {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+        }
+    </style>
+
+  <style>
+    .gtranslate_wrapper select {
+      background: transparent !important;
+      color: #f8fafc !important;
+      border: none !important;
+      font-size: 0.8125rem !important;
+      font-weight: 600 !important;
+      outline: none !important;
+      cursor: pointer !important;
+      padding: 2px 4px !important;
+    }
+    .gtranslate_wrapper select option {
+      background: #0B1F3A !important;
+      color: #ffffff !important;
+    }
+    .gt_switcher {
+      display: inline-flex !important;
+      align-items: center !important;
+    }
+  </style>
+  </head>
+
+<body class="font-sans bg-white text-slate-700" x-data="{ mobileMenuOpen: false, searchOpen: false }">
+    <!-- 3D Earth preloader (CSS in <head> so it paints before Tailwind/Alpine) -->
+    <div id="preloader" class="earth-preloader" aria-busy="true" aria-label="Loading">
+        <div class="earth-preloader__stage" aria-hidden="true">
+            <div class="earth-preloader__glow"></div>
+            <picture>
+                <source srcset="images/earth-globe-loader.webp" type="image/webp">
+                <img src="images/earth-globe-loader.png"
+                     alt=""
+                     class="earth-preloader__globe"
+                     width="420"
+                     height="420"
+                     decoding="sync"
+                     fetchpriority="high">
+            </picture>
+        </div>
+        <div class="earth-preloader__label">
+            <span class="earth-preloader__brand">Express Cargo</span>
+            <span class="earth-preloader__status">Connecting worldwide</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative bg-white/95 backdrop-blur z-50 border-b border-slate-100">
+        <!-- Main Navigation -->
+        <nav class="bg-transparent">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-[4.5rem]">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="index.html" class="flex items-center">
+                            <img src="images/J3vnilG6TddFEwFkWebd0LvUcwomzTgY4EFhaEDN.png"
+                                 alt="Express Cargo"
+                                 class="h-11 w-auto">
+                        </a>
+                    </div>
+
+                    <!-- Desktop Navigation -->
+                    <div class="hidden lg:flex items-center space-x-1">
+                        <a href="about.html" class="text-primary-700 hover:text-secondary-600 px-3 py-2 text-sm font-semibold transition-colors">
+                            About Us
+                        </a>
+                        <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                            <button class="text-primary-700 hover:text-secondary-600 px-3 py-2 text-sm font-semibold transition-colors flex items-center">
+                                Services
+                                <i class="fas fa-chevron-down ml-1 text-[10px]"></i>
+                            </button>
+                            <div x-show="open"
+                                 x-cloak
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 translate-y-1"
+                                 x-transition:enter-end="opacity-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 translate-y-1"
+                                 class="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl border border-slate-100 py-2 z-50"
+                                 style="box-shadow: 0 16px 40px rgba(11,31,58,0.10);">
+                                <a href="services.html" class="block px-4 py-3 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                    <i class="fas fa-ship mr-3 text-secondary-600"></i>Sea/Ocean Freight
+                                </a>
+                                <a href="services.html" class="block px-4 py-3 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                    <i class="fas fa-truck mr-3 text-secondary-600"></i>Road Transportation
+                                </a>
+                                <a href="services.html" class="block px-4 py-3 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                    <i class="fas fa-plane mr-3 text-secondary-600"></i>Air Freight
+                                </a>
+                                <a href="services.html" class="block px-4 py-3 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                    <i class="fas fa-warehouse mr-3 text-secondary-600"></i>Warehousing
+                                </a>
+                                <a href="services.html" class="block px-4 py-3 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                    <i class="fas fa-box mr-3 text-secondary-600"></i>Packaging & Storage
+                                </a>
+                                <a href="diplomatic.html" class="block px-4 py-3 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                                    <i class="fas fa-shield-alt mr-3 text-secondary-600"></i>Diplomatic Services
+                                </a>
+                            </div>
+                        </div>
+                        <a href="order.html" class="px-3 py-2 text-sm font-semibold transition-colors text-primary-700 hover:text-secondary-600">
+                            Tracking
+                        </a>
+                        <a href="request-quote.html" class="text-primary-700 hover:text-secondary-600 px-3 py-2 text-sm font-semibold transition-colors">
+                            Pricing
+                        </a>
+                        <a href="contact.html" class="text-primary-700 hover:text-secondary-600 px-3 py-2 text-sm font-semibold transition-colors">
+                            Contact Us
+                        </a>
+                    </div>
+
+                    <!-- Search & CTA -->
+                    <div class="hidden lg:flex items-center space-x-3">
+                        <a href="order.html"
+                           class="inline-flex items-center rounded-xl border-2 border-primary-600 text-primary-600 hover:bg-primary-50 px-4 py-2 text-sm font-semibold transition-colors">
+                            Track
+                        </a>
+                        <a href="request-quote.html"
+                           class="inline-flex items-center rounded-xl bg-secondary-600 hover:bg-secondary-700 text-white px-5 py-2.5 text-sm font-semibold transition-colors">
+                            Get Quote
+                        </a>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="lg:hidden flex items-center space-x-2">
+                        <button type="button"
+                                @click="searchOpen = !searchOpen; mobileMenuOpen = false"
+                                class="p-3 text-gray-500 hover:text-primary-600 transition-colors"
+                                aria-label="Search tracking">
+                            <i class="fas fa-search text-lg"></i>
+                        </button>
+                        <button type="button"
+                                @click="mobileMenuOpen = !mobileMenuOpen; searchOpen = false"
+                                class="p-3 text-primary-600 hover:text-secondary-600 transition-colors"
+                                aria-label="Toggle menu"
+                                :aria-expanded="mobileMenuOpen.toString()">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Search -->
+            <div x-show="searchOpen"
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 -translate-y-1"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 -translate-y-1"
+                 class="lg:hidden border-t border-gray-200 bg-gray-50 px-4 py-4">
+                <form method="POST" action="order.html" method="GET" class="space-y-3">
+                    <input type="hidden" name="_token" value="zChd3ONCIMySk7EdtJJ66SPogbcQrJU9e2Ui5VqJ">                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Track Your Shipment</label>
+                        <input type="text"
+                               name="trackingnumber"
+                               placeholder="Enter tracking number..."
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                               required>
+                    </div>
+                    <button type="submit"
+                            class="w-full bg-primary-600 text-white py-3 px-4 rounded-lg hover:bg-primary-700 transition-colors font-medium">
+                        <i class="fas fa-search mr-2"></i>Track Now
+                    </button>
+                </form>
+            </div>
+        </nav>
+
+        <!-- Error Message Banner -->
+            </header>
+
+    <!-- Full-screen navy slide-in menu (outside header so backdrop-blur can't tint it) -->
+    <div class="lg:hidden"
+         x-cloak
+         x-show="mobileMenuOpen"
+         @keydown.escape.window="mobileMenuOpen = false"
+         x-effect="document.body.style.overflow = mobileMenuOpen ? 'hidden' : ''">
+        <div x-show="mobileMenuOpen"
+             x-transition:enter="transform transition ease-out duration-300"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transform transition ease-in duration-250"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             id="mobile-nav-panel"
+             class="fixed inset-0 z-[10050] w-full text-white flex flex-col"
+             style="background-color: #0B1F3A; -webkit-overflow-scrolling: touch;"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Main menu">
+            <div class="pointer-events-none absolute inset-0 opacity-20"
+                 style="background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px); background-size: 22px 22px;"></div>
+
+            <div class="relative flex items-center justify-between px-5 sm:px-6 h-[4.5rem] border-b border-white/10"
+                 style="background-color: #0B1F3A;">
+                <a href="index.html" class="inline-flex items-center" @click="mobileMenuOpen = false">
+                    <img src="images/J3vnilG6TddFEwFkWebd0LvUcwomzTgY4EFhaEDN.png"
+                         alt="Express Cargo"
+                         class="h-10 w-auto brightness-0 invert opacity-95">
+                </a>
+                <button type="button"
+                        @click="mobileMenuOpen = false"
+                        class="inline-flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors"
+                        style="background-color: rgba(255,255,255,0.12);"
+                        aria-label="Close menu">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <div class="relative flex-1 overflow-y-auto px-5 sm:px-6 py-6" style="background-color: #0B1F3A;">
+                <nav class="space-y-1">
+                    <a href="index.html"
+                       @click="mobileMenuOpen = false"
+                       class="block rounded-xl px-4 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors ">
+                        Home
+                    </a>
+                    <a href="about.html"
+                       @click="mobileMenuOpen = false"
+                       class="block rounded-xl px-4 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">
+                        About Us
+                    </a>
+
+                    <div x-data="{ servicesOpen: false }">
+                        <button type="button"
+                                @click="servicesOpen = !servicesOpen"
+                                class="w-full flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">
+                            <span>Services</span>
+                            <i class="fas fa-chevron-down text-xs text-white/60 transition-transform duration-200"
+                               :class="servicesOpen ? 'rotate-180' : ''"></i>
+                        </button>
+                        <div x-show="servicesOpen"
+                             x-cloak
+                             x-transition
+                             class="mt-1 ml-2 space-y-1 border-l border-white/15 pl-3">
+                            <a href="services.html" @click="mobileMenuOpen = false" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors">
+                                <i class="fas fa-ship text-secondary-400 w-4"></i>Sea/Ocean Freight
+                            </a>
+                            <a href="services.html" @click="mobileMenuOpen = false" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors">
+                                <i class="fas fa-truck text-secondary-400 w-4"></i>Road Transportation
+                            </a>
+                            <a href="services.html" @click="mobileMenuOpen = false" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors">
+                                <i class="fas fa-plane text-secondary-400 w-4"></i>Air Freight
+                            </a>
+                            <a href="services.html" @click="mobileMenuOpen = false" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors">
+                                <i class="fas fa-warehouse text-secondary-400 w-4"></i>Warehousing
+                            </a>
+                            <a href="services.html" @click="mobileMenuOpen = false" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors">
+                                <i class="fas fa-box text-secondary-400 w-4"></i>Packaging & Storage
+                            </a>
+                            <a href="diplomatic.html" @click="mobileMenuOpen = false" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors">
+                                <i class="fas fa-shield-alt text-secondary-400 w-4"></i>Diplomatic Services
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="order.html"
+                       @click="mobileMenuOpen = false"
+                       class="block rounded-xl px-4 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">
+                        Tracking
+                    </a>
+                    <a href="request-quote.html"
+                       @click="mobileMenuOpen = false"
+                       class="block rounded-xl px-4 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">
+                        Pricing
+                    </a>
+                    <a href="contact.html"
+                       @click="mobileMenuOpen = false"
+                       class="block rounded-xl px-4 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">
+                        Contact Us
+                    </a>
+                </nav>
+            </div>
+
+            <div class="relative border-t border-white/10 px-5 sm:px-6 py-5 space-y-3" style="background-color: #0B1F3A;">
+                <a href="order.html"
+                   @click="mobileMenuOpen = false"
+                   class="flex w-full items-center justify-center gap-2 rounded-xl border border-white/25 px-4 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
+                    <i class="fas fa-search-location"></i>
+                    Track Shipment
+                </a>
+                <a href="request-quote.html"
+                   @click="mobileMenuOpen = false"
+                   class="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary-600 px-4 py-3.5 text-sm font-semibold text-white hover:bg-secondary-700 transition-colors">
+                    Get Quote
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+        
+
+<!-- Hero -->
+<section class="relative overflow-hidden bg-[#0B1F3A] text-white min-h-[320px] sm:min-h-[380px] lg:min-h-[420px] flex items-center">
+    <img src="images/quote-hero-collage.webp"
+         alt=""
+         class="absolute inset-0 w-full h-full object-cover object-right"
+         width="1400"
+         height="900"
+         decoding="async"
+         fetchpriority="high"
+         loading="eager"
+         aria-hidden="true">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#0B1F3A] via-[#0B1F3A]/90 to-[#0B1F3A]/35 lg:to-[#0B1F3A]/20"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/60 via-transparent to-[#0B1F3A]/30"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-14 sm:py-16 lg:py-20">
+        <div class="max-w-xl">
+            <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold tracking-wider text-white/90 mb-5 ring-1 ring-white/15">
+                <span class="h-1.5 w-1.5 rounded-full bg-secondary-500"></span>
+                GET A CUSTOM QUOTE
+            </div>
+            <h1 class="font-display text-4xl sm:text-5xl lg:text-[3rem] font-extrabold leading-tight text-white"
+                data-soft-blur="hero">
+                Request a Quote
+            </h1>
+            <p class="mt-4 text-slate-200 text-base sm:text-lg leading-relaxed">
+                Tell us about your shipment and we&#039;ll get back with a tailored logistics quote.
+            </p>
+            <nav class="mt-7 flex items-center gap-2 text-sm text-slate-300" aria-label="Breadcrumb">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px] text-slate-500"></i>
+                <span class="text-white font-medium">Request a Quote</span>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Quote form -->
+<section class="relative bg-[#F5F7FB] py-12 sm:py-16 lg:py-20 overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 opacity-40"
+         style="background-image: radial-gradient(#c5d4e8 1.1px, transparent 1.1px); background-size: 20px 20px;"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+            <!-- Side info -->
+            <div class="lg:col-span-4">
+                <div class="rounded-[1.75rem] border border-slate-100 bg-white p-6 sm:p-7"
+                     style="box-shadow: 0 16px 40px rgba(11,31,58,0.06);">
+                    <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E8F1FB] text-primary-600 mb-5">
+                        <i class="fas fa-file-invoice-dollar text-lg"></i>
+                    </div>
+                    <h2 class="font-display text-2xl font-extrabold text-primary-600 leading-tight mb-3">
+                        Fast. Clear. Customized.
+                    </h2>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed mb-6">
+                        Share a few shipment details and our team will prepare a competitive quote for air, ocean, or road freight.
+                    </p>
+
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E8F1FB] text-primary-600">
+                                <i class="fas fa-check text-xs"></i>
+                            </span>
+                            <span class="text-slate-600 text-sm leading-relaxed">Transparent pricing with no hidden fees</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E8F1FB] text-primary-600">
+                                <i class="fas fa-check text-xs"></i>
+                            </span>
+                            <span class="text-slate-600 text-sm leading-relaxed">Quotes for air, ocean and road freight</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E8F1FB] text-primary-600">
+                                <i class="fas fa-check text-xs"></i>
+                            </span>
+                            <span class="text-slate-600 text-sm leading-relaxed">Dedicated support from quote to delivery</span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-7 pt-6 border-t border-slate-100">
+                        <a href="contact.html" class="inline-flex items-center gap-2 text-sm font-semibold text-secondary-600 hover:text-secondary-700 transition-colors">
+                            Prefer to talk? Contact support
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form card -->
+            <div class="lg:col-span-8">
+                <div class="bg-white rounded-[1.75rem] border border-slate-100 p-6 sm:p-8 lg:p-10"
+                     style="box-shadow: 0 22px 50px rgba(11,31,58,0.08);">
+                    <div class="flex items-start gap-3 mb-7">
+                        <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFF1E7] text-secondary-600">
+                            <i class="fas fa-calculator"></i>
+                        </span>
+                        <div>
+                            <h2 class="font-display text-xl sm:text-2xl font-extrabold text-primary-600 leading-tight">
+                                Request a Free Quote
+                            </h2>
+                            <p class="text-slate-500 text-sm sm:text-base mt-1.5 leading-relaxed">
+                                Fill out the form below and our team will get back to you with a customized shipping quote.
+                            </p>
+                        </div>
+                    </div>
+
+                    
+                    
+                    <form class="space-y-5" method="GET" action="https://express-cargo.ltd/contact">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label for="f-type" class="block text-sm font-semibold text-primary-700 mb-2">Freight Type</label>
+                                <div class="relative">
+                                    <select name="fright_type"
+                                            id="f-type"
+                                            required
+                                            class="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3.5 text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                                        <option value="">Select type</option>
+                                        <option value="Air Freight">Air Freight</option>
+                                        <option value="Ocean Freight">Ocean Freight</option>
+                                        <option value="Road Freight">Road Freight</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="quote-email" class="block text-sm font-semibold text-primary-700 mb-2">Email Address</label>
+                                <input type="email"
+                                       id="quote-email"
+                                       name="email"
+                                       placeholder="you@example.com"
+                                       required
+                                       class="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3.5 text-primary-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                            </div>
+
+                            <div>
+                                <label for="departure-country" class="block text-sm font-semibold text-primary-700 mb-2">Country of Departure</label>
+                                <input type="text"
+                                       id="departure-country"
+                                       name="departure_country"
+                                       placeholder="Country of departure"
+                                       required
+                                       class="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3.5 text-primary-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                            </div>
+
+                            <div>
+                                <label for="recipient-country" class="block text-sm font-semibold text-primary-700 mb-2">Recipient Country</label>
+                                <input type="text"
+                                       id="recipient-country"
+                                       name="recipient_country"
+                                       placeholder="Recipient country"
+                                       required
+                                       class="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3.5 text-primary-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                            </div>
+
+                            <div>
+                                <label for="quote-weight" class="block text-sm font-semibold text-primary-700 mb-2">Total Weight (KG)</label>
+                                <input type="text"
+                                       id="quote-weight"
+                                       name="weight"
+                                       placeholder="e.g. 25"
+                                       required
+                                       class="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3.5 text-primary-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                            </div>
+
+                            <div>
+                                <label for="delivery-date" class="block text-sm font-semibold text-primary-700 mb-2">Expected Delivery Date</label>
+                                <input type="date"
+                                       id="delivery-date"
+                                       name="expected_delivery_date"
+                                       required
+                                       class="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3.5 text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                name="quote_request"
+                                value="1"
+                                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-500 hover:bg-secondary-600 text-white font-semibold px-8 py-4 shadow-lg shadow-secondary-500/25 hover:-translate-y-0.5 transition-all duration-300">
+                            Submit Request
+                            <i class="fas fa-arrow-right text-sm"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA strip -->
+<section class="relative bg-white py-12 sm:py-16 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-[1.75rem] bg-[#0B1F3A] px-6 sm:px-10 py-10 text-center"
+             style="box-shadow: 0 22px 50px rgba(11,31,58,0.18);">
+            <div class="pointer-events-none absolute inset-0 opacity-25"
+                 style="background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px); background-size: 22px 22px;"></div>
+            <div class="relative max-w-2xl mx-auto">
+                <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white leading-tight" data-soft-reveal>
+                    Need help choosing the right shipping option?
+                </h2>
+                <p class="mt-3 text-slate-300 text-base leading-relaxed mb-7">
+                    Our logistics specialists are available to guide you through air, ocean and road solutions.
+                </p>
+                <a href="contact.html"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-500 hover:bg-secondary-600 text-white font-semibold px-7 py-3.5 transition-colors">
+                    Contact Us
+                    <i class="fas fa-arrow-right text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+        <!-- Footer -->
+        <footer class="relative overflow-hidden bg-[#071526] text-white">
+            <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary-500/60 to-transparent"></div>
+            <div class="pointer-events-none absolute -top-32 -right-20 h-72 w-72 rounded-full bg-secondary-500/10 blur-3xl"></div>
+
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+                    <!-- Brand -->
+                    <div class="lg:col-span-4">
+                        <a href="index.html" class="inline-flex items-center mb-5 group">
+                            <img src="images/logo-footer.png" alt="Express Cargo" class="h-12 w-auto rounded-lg object-contain shadow-sm opacity-95 group-hover:opacity-100 transition-opacity">
+                        </a>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-sm mb-6">
+                            Providing smart logistics solutions across the world. Shipping, courier services,
+                            and real-time tracking through a trusted global network.
+                        </p>
+                        <div class="flex items-center gap-2.5">
+                                                        <a href="#"
+                               class="h-10 w-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-slate-300 hover:text-white hover:border-secondary-500/50 hover:bg-secondary-500/20 transition-all duration-300"
+                               aria-label="Social link">
+                                <i class="fab fa-facebook-f text-sm"></i>
+                            </a>
+                                                        <a href="#"
+                               class="h-10 w-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-slate-300 hover:text-white hover:border-secondary-500/50 hover:bg-secondary-500/20 transition-all duration-300"
+                               aria-label="Social link">
+                                <i class="fab fa-twitter text-sm"></i>
+                            </a>
+                                                        <a href="#"
+                               class="h-10 w-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-slate-300 hover:text-white hover:border-secondary-500/50 hover:bg-secondary-500/20 transition-all duration-300"
+                               aria-label="Social link">
+                                <i class="fab fa-linkedin-in text-sm"></i>
+                            </a>
+                                                        <a href="#"
+                               class="h-10 w-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-slate-300 hover:text-white hover:border-secondary-500/50 hover:bg-secondary-500/20 transition-all duration-300"
+                               aria-label="Social link">
+                                <i class="fab fa-instagram text-sm"></i>
+                            </a>
+                                                    </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="lg:col-span-2">
+                        <h4 class="font-display text-sm font-bold tracking-wider uppercase text-white mb-5">
+                            Quick Links
+                            <span class="mt-2 block h-0.5 w-8 rounded-full bg-secondary-500"></span>
+                        </h4>
+                        <ul class="space-y-3">
+                                                        <li>
+                                <a href="index.html" class="group inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors">
+                                    <i class="fas fa-chevron-right text-[10px] text-secondary-500 opacity-70 group-hover:translate-x-0.5 transition-transform"></i>
+                                    Home
+                                </a>
+                            </li>
+                                                        <li>
+                                <a href="about.html" class="group inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors">
+                                    <i class="fas fa-chevron-right text-[10px] text-secondary-500 opacity-70 group-hover:translate-x-0.5 transition-transform"></i>
+                                    About Us
+                                </a>
+                            </li>
+                                                        <li>
+                                <a href="services.html" class="group inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors">
+                                    <i class="fas fa-chevron-right text-[10px] text-secondary-500 opacity-70 group-hover:translate-x-0.5 transition-transform"></i>
+                                    Our Services
+                                </a>
+                            </li>
+                                                        <li>
+                                <a href="order.html" class="group inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors">
+                                    <i class="fas fa-chevron-right text-[10px] text-secondary-500 opacity-70 group-hover:translate-x-0.5 transition-transform"></i>
+                                    Track Shipment
+                                </a>
+                            </li>
+                                                        <li>
+                                <a href="contact.html" class="group inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors">
+                                    <i class="fas fa-chevron-right text-[10px] text-secondary-500 opacity-70 group-hover:translate-x-0.5 transition-transform"></i>
+                                    Contact Us
+                                </a>
+                            </li>
+                                                        <li>
+                                <a href="diplomatic.html" class="group inline-flex items-center gap-2 text-slate-400 hover:text-white text-sm transition-colors">
+                                    <i class="fas fa-chevron-right text-[10px] text-secondary-500 opacity-70 group-hover:translate-x-0.5 transition-transform"></i>
+                                    Diplomatic Services
+                                </a>
+                            </li>
+                                                    </ul>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="lg:col-span-3">
+                        <h4 class="font-display text-sm font-bold tracking-wider uppercase text-white mb-5">
+                            Contact Info
+                            <span class="mt-2 block h-0.5 w-8 rounded-full bg-secondary-500"></span>
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="mt-0.5 h-9 w-9 shrink-0 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-secondary-500">
+                                    <i class="fas fa-envelope text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs mb-0.5">Email Us</p>
+                                    <a href="mailto:support@express-cargo.ltd" class="text-sm text-slate-200 hover:text-secondary-400 transition-colors break-all">
+                                        support@express-cargo.ltd
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-0.5 h-9 w-9 shrink-0 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-secondary-500">
+                                    <i class="fas fa-phone text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs mb-0.5">Call Us</p>
+                                    <p class="text-sm text-slate-200">TOLL FREE Support</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="mt-0.5 h-9 w-9 shrink-0 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-secondary-500">
+                                    <i class="fas fa-clock text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-slate-500 text-xs mb-0.5">Working Hours</p>
+                                    <p class="text-sm text-slate-200">24/7 Global Support</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Track -->
+                    <div class="lg:col-span-3">
+                        <h4 class="font-display text-sm font-bold tracking-wider uppercase text-white mb-5">
+                            Quick Track
+                            <span class="mt-2 block h-0.5 w-8 rounded-full bg-secondary-500"></span>
+                        </h4>
+                        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+                            Enter your tracking number to get live shipment updates.
+                        </p>
+                        <form method="POST" action="order.html" method="GET" class="space-y-3">
+                            <input type="hidden" name="_token" value="zChd3ONCIMySk7EdtJJ66SPogbcQrJU9e2Ui5VqJ">                            <div class="relative">
+                                <i class="fas fa-barcode absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                                <input type="text"
+                                       name="trackingnumber"
+                                       placeholder="Enter tracking number..."
+                                       class="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-secondary-500/40 focus:border-secondary-500/50 transition-all"
+                                       required>
+                            </div>
+                            <button type="submit"
+                                    class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-500 hover:bg-secondary-600 text-white py-3 px-4 text-sm font-semibold shadow-lg shadow-secondary-500/20 hover:-translate-y-0.5 transition-all duration-300">
+                                <i class="fas fa-search"></i>
+                                Track Shipment
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="relative border-t border-white/10">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+                    <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                        <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
+                            <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-slate-300 backdrop-blur-sm shadow-sm hover:border-white/20 transition-all">
+          <i class="fas fa-globe text-secondary-400 text-sm animate-pulse"></i>
+          <span class="text-slate-400 text-xs mr-0.5">Language:</span>
+          <div class="gtranslate_wrapper"></div>
+       </div>
+                            <p class="text-slate-500 text-sm text-center sm:text-left">
+                                Copyright &copy; <span id="currentYear"></span> Express Cargo. All rights reserved.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+                            <a href="#" class="text-slate-500 hover:text-secondary-400 transition-colors">Privacy Policy</a>
+                            <a href="#" class="text-slate-500 hover:text-secondary-400 transition-colors">Terms of Service</a>
+                            <a href="#" class="text-slate-500 hover:text-secondary-400 transition-colors">Shipping Policy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- WhatsApp Float Button -->
+
+
+    <!-- Core Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Alpine.js with iOS compatibility fixes -->
+    <script>
+        // Fix for iOS Safari issues with Alpine.js
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force repaint to help with iOS rendering
+            document.body.style.display = 'none';
+            document.body.offsetHeight; // Trigger reflow
+            document.body.style.display = '';
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+    <script>
+        // Enhanced preloader functionality for iOS compatibility
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set a timeout as a fallback in case the load event doesn't fire properly on iOS
+            const fallbackTimeout = setTimeout(hidePreloader, 3000); // 3 second fallback
+
+            function hidePreloader() {
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    // Add transition styles programmatically
+                    preloader.style.transition = 'opacity 0.5s ease';
+                    preloader.style.opacity = '0';
+
+                    // Ensure the preloader is actually hidden
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 500);
+                }
+                // Clear the fallback timeout if the load event fired properly
+                clearTimeout(fallbackTimeout);
+            }
+
+            // Try to detect when the page is fully loaded
+            window.addEventListener('load', hidePreloader);
+
+            // Set the current year for copyright
+            const yearElement = document.getElementById('currentYear');
+            if (yearElement) {
+                yearElement.textContent = new Date().getFullYear();
+            }
+        });
+
+        // Google Translate initialization - with iOS compatibility fixes
+
+    </script>
+
+<script>
+    window.gtranslateSettings = {
+        default_language: "en",
+        alt_flags:{"en":"usa"},
+        wrapper_selector: ".gtranslate_wrapper",
+        flag_style: "3d",
+    };
+</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/dropdown.js" defer></script>
+
+
+    <!-- Custom Scripts -->
+    <script src="js/soft-blur-text.js" defer></script>
+<style>
+    [data-soft-blur="hero"],
+    [data-soft-reveal],
+    .soft-reveal-pending {
+        backface-visibility: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        [data-soft-blur="hero"],
+        [data-soft-reveal],
+        .soft-reveal-pending {
+            opacity: 1 !important;
+            transform: none !important;
+            filter: none !important;
+        }
+    }
+</style>
+    
+<!-- Smartsupp Live Chat script -->
+<script type="text/javascript">
+var _smartsupp = _smartsupp || {};
+_smartsupp.key = '4788f535536c24a58d852d87ca6ef41073f53009';
+window.smartsupp||(function(d) {
+  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+  s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+  c.type='text/javascript';c.charset='utf-8';c.async=true;
+  c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+})(document);
+_smartsupp.offsetY = 100; // move along the Y axis by 100 pixels
+</script>
+<noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
+
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const quoteForm = document.querySelector('form[action*="contact"]') || document.querySelector('form');
+        if (quoteForm) {
+          quoteForm.removeAttribute('action');
+          quoteForm.removeAttribute('method');
+
+          const alertContainer = document.createElement('div');
+          alertContainer.id = 'quoteAlert';
+          alertContainer.className = 'hidden mb-4 p-4 rounded-2xl text-sm font-medium';
+          quoteForm.prepend(alertContainer);
+
+          quoteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = quoteForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Submitting Request...';
+            }
+            alertContainer.className = 'hidden';
+
+            const formData = new FormData(quoteForm);
+            const payload = {
+              freight_type: formData.get('freight_type') || formData.get('fright_type') || 'Air Freight',
+              email: formData.get('email'),
+              departure_country: formData.get('departure_country') || formData.get('departure') || formData.get('origin'),
+              recipient_country: formData.get('recipient_country') || formData.get('recipient') || formData.get('destination'),
+              weight: formData.get('weight'),
+              expected_delivery_date: formData.get('expected_delivery_date') || formData.get('delivery_date'),
+              details: formData.get('details') || formData.get('message') || formData.get('comments')
+            };
+
+            try {
+              const resp = await fetch('/api/contact/quote', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              const data = await resp.json();
+
+              if (resp.ok && data.success) {
+                alertContainer.className = 'mb-4 p-4 rounded-2xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200';
+                alertContainer.innerHTML = '<i class="fas fa-check-circle mr-2"></i> ' + (data.data?.message || 'Quote request received! Our logistics manager will send you a tailored estimate.');
+                quoteForm.reset();
+              } else {
+                alertContainer.className = 'mb-4 p-4 rounded-2xl text-sm font-medium bg-red-50 text-red-800 border border-red-200';
+                alertContainer.innerHTML = '<i class="fas fa-exclamation-circle mr-2"></i> ' + (data.message || 'Error submitting quote request. Please verify required fields.');
+              }
+            } catch (err) {
+              alertContainer.className = 'mb-4 p-4 rounded-2xl text-sm font-medium bg-red-50 text-red-800 border border-red-200';
+              alertContainer.innerHTML = '<i class="fas fa-exclamation-circle mr-2"></i> Server connection failed. Please try again.';
+            } finally {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+              }
+            }
+          });
+        }
+      });
+    </script>
+    
+
+<script>/* trackingHelperInstalled */</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const forms = document.querySelectorAll('form[action="order.html"]');
+      forms.forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+          const input = form.querySelector('input[name="tracking_number"]') || form.querySelector('input[name="trackingnumber"]') || form.querySelector('input[type="text"]');
+          if (input && input.value.trim()) {
+            e.preventDefault();
+            window.location.href = 'order.html?tracking_number=' + encodeURIComponent(input.value.trim());
+          }
+        });
+      });
+    });
+  </script>
+  
+</body>
+</html>
