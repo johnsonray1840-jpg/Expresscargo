@@ -666,7 +666,7 @@ function transformHtml(content, pageName) {
         countdownInterval = setInterval(update, 60000);
       }
 
-      function renderShipmentData(shipment) {
+      function renderShipmentData(shipment, isSilent = false) {
         currentShipmentData = shipment;
         document.getElementById('trackingResultsSection').classList.remove('hidden');
         document.getElementById('trackingLoading').classList.add('hidden');
@@ -684,9 +684,19 @@ function transformHtml(content, pageName) {
 
         updateStepper(conf.step);
 
+        const badge = document.getElementById('resStatusBadge');
+        badge.className = 'px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border flex items-center gap-1.5 ' + conf.bg;
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full animate-ping ' + conf.dot + '"></span>' + conf.label;
+
+        // Current Checkpoint / Substatus Display
+        const substatusEl = document.getElementById('resSubstatus');
+        if (substatusEl) {
+          substatusEl.textContent = shipment.currentCheckpoint || shipment.currentStatus || conf.label;
+        }
+
         const origin = shipment.origin || (shipment.route && shipment.route.origin) || {};
         const dest = shipment.destination || (shipment.route && shipment.route.destination) || {};
-        document.getElementById('resOriginCity').textContent = origin.city || 'Origin Port';
+        document.getElementById('resOriginCity').textContent = origin.city || 'Origin Gateway';
         document.getElementById('resOriginCountry').textContent = origin.country || '';
         document.getElementById('resDestCity').textContent = dest.city || 'Destination Port';
         document.getElementById('resDestCountry').textContent = dest.country || '';
@@ -758,11 +768,13 @@ function transformHtml(content, pageName) {
 
         // Render Map
         setTimeout(() => {
-          renderMap(shipment);
+          renderMap(shipment, isSilent);
         }, 150);
 
-        // Smooth scroll
-        document.getElementById('trackingResultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Smooth scroll only on initial manual query
+        if (!isSilent) {
+          document.getElementById('trackingResultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
 
       // Multi-Theme Aviation Tile Layer Engine (100% Free, Zero API Key Required)
@@ -1004,7 +1016,7 @@ function transformHtml(content, pageName) {
         return fallback;
       }
 
-      async function renderMap(shipment) {
+      async function renderMap(shipment, isSilent = false) {
         const mapContainer = document.getElementById('shipmentMap');
         if (!mapContainer) return;
 
@@ -1054,14 +1066,17 @@ function transformHtml(content, pageName) {
         }
 
         try {
-          if (!liveMap) {
+          const isFirstMapInit = !liveMap;
+          if (isFirstMapInit) {
             liveMap = L.map('shipmentMap', { scrollWheelZoom: false, zoomControl: true }).setView(origCoords, 3);
             initMapLayer();
           }
 
-          liveMap.invalidateSize();
-          setTimeout(() => { if (liveMap) liveMap.invalidateSize(); }, 200);
-          setTimeout(() => { if (liveMap) liveMap.invalidateSize(); }, 600);
+          if (!isSilent) {
+            liveMap.invalidateSize();
+            setTimeout(() => { if (liveMap) liveMap.invalidateSize(); }, 200);
+            setTimeout(() => { if (liveMap) liveMap.invalidateSize(); }, 600);
+          }
 
           // Clear previous markers & lines
           mapMarkers.forEach(m => liveMap.removeLayer(m));
@@ -1140,7 +1155,7 @@ function transformHtml(content, pageName) {
             );
           mapMarkers.push(mVehicle);
 
-          if (pathCoords.length > 1) {
+          if (pathCoords.length > 1 && (isFirstMapInit || !isSilent)) {
             liveMap.fitBounds(L.latLngBounds(pathCoords), { padding: [60, 60] });
           }
         } catch (e) {
@@ -1179,7 +1194,7 @@ function transformHtml(content, pageName) {
           const json = await res.json();
 
           if (res.ok && json.success && json.data) {
-            renderShipmentData(json.data);
+            renderShipmentData(json.data, isSilent);
             initSocket(cleanTrNum);
             startLive10SecondPolling(cleanTrNum);
           } else if (!isSilent) {
@@ -1203,8 +1218,8 @@ function transformHtml(content, pageName) {
           socketClient = io();
         }
         socketClient.emit('track:join', { trackingNumber });
-        socketClient.on('shipment:updated', () => fetchShipmentTracking(trackingNumber));
-        socketClient.on('location:update', () => fetchShipmentTracking(trackingNumber));
+        socketClient.on('shipment:updated', () => fetchShipmentTracking(trackingNumber, true));
+        socketClient.on('location:update', () => fetchShipmentTracking(trackingNumber, true));
       }
 
       function copyTrackingNumber() {
