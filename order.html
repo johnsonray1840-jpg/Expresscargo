@@ -228,6 +228,20 @@
       .radar-pulse {
         animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       }
+      /* Custom mobile scrollbar for theme selector */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      @media (max-width: 640px) {
+        .custom-vehicle-marker .radar-pulse {
+          width: 44px !important;
+          height: 44px !important;
+        }
+      }
       @media print {
         body * { visibility: hidden !important; }
         #printableWaybillModal, #printableWaybillModal * { visibility: visible !important; }
@@ -564,336 +578,354 @@
         </div>
 
         
-    <!-- LIVE TRACKING RESULTS CONTAINER (10/10 ENTERPRISE TELEMETRY SUITE) -->
-    <div id="trackingResultsSection" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-20">
+    <!-- LIVE TRACKING RESULTS CONTAINER (PREMIUM ULTRA-RESPONSIVE SUITE) -->
+    <div id="trackingResultsSection" class="hidden max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-6 sm:mt-10 mb-16 sm:mb-20">
       <!-- Loading State -->
-      <div id="trackingLoading" class="hidden text-center py-20 bg-white/90 backdrop-blur-xl rounded-3xl border border-slate-200/80 shadow-2xl">
+      <div id="trackingLoading" class="hidden text-center py-12 sm:py-20 px-4 bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-2xl">
         <div class="relative inline-flex items-center justify-center">
-          <div class="h-16 w-16 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin"></div>
-          <i class="fas fa-satellite text-primary-600 text-xl absolute"></i>
+          <div class="h-14 w-14 sm:h-16 sm:w-16 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin"></div>
+          <i class="fas fa-satellite text-primary-600 text-lg sm:text-xl absolute"></i>
         </div>
-        <h3 class="mt-5 text-xl font-extrabold text-[#0B1F3A]">Acquiring Live Satellite Telemetry...</h3>
-        <p class="mt-2 text-sm text-slate-500 max-w-md mx-auto">Querying global airway navigation radars, customs checkpoints, and transit telemetry nodes.</p>
+        <h3 class="mt-4 sm:mt-5 text-lg sm:text-xl font-extrabold text-[#0B1F3A]">Acquiring Live Satellite Telemetry...</h3>
+        <p class="mt-2 text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">Querying global airway navigation radars, customs checkpoints, and transit telemetry nodes.</p>
       </div>
 
       <!-- Error State -->
-      <div id="trackingError" class="hidden bg-red-50/90 backdrop-blur-md border border-red-200 text-red-800 p-8 rounded-3xl shadow-xl text-center">
-        <div class="h-14 w-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto mb-4">
+      <div id="trackingError" class="hidden bg-red-50/95 backdrop-blur-md border border-red-200 text-red-800 p-6 sm:p-8 rounded-2xl sm:rounded-3xl shadow-xl text-center">
+        <div class="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-xl sm:text-2xl mx-auto mb-3 sm:mb-4 shadow-sm">
           <i class="fas fa-exclamation-triangle"></i>
         </div>
-        <h3 class="text-lg font-bold text-red-900">Consignment Lookup Failed</h3>
-        <p id="trackingErrorMessage" class="text-sm text-red-700 mt-2 max-w-lg mx-auto">Shipment not found. Please verify the tracking number and try again.</p>
-        <button onclick="document.getElementById('trackingNumber')?.focus(); window.scrollTo({top: 0, behavior: 'smooth'});" class="mt-5 px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-md">
+        <h3 class="text-base sm:text-lg font-bold text-red-900">Consignment Lookup Failed</h3>
+        <p id="trackingErrorMessage" class="text-xs sm:text-sm text-red-700 mt-2 max-w-lg mx-auto leading-relaxed">Shipment not found. Please verify the tracking number and try again.</p>
+        <button onclick="document.getElementById('trackingNumber')?.focus(); window.scrollTo({top: 0, behavior: 'smooth'});" class="mt-4 sm:mt-5 px-5 sm:px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-md active:scale-95">
           Re-enter Tracking Number
         </button>
       </div>
 
       <!-- Live Dashboard Content -->
-      <div id="trackingContent" class="hidden space-y-8">
+      <div id="trackingContent" class="hidden space-y-6 sm:space-y-8">
         <!-- Top Command Header Card -->
-        <div class="bg-gradient-to-r from-[#0B1F3A] via-[#0e2749] to-[#071526] rounded-3xl p-6 sm:p-8 text-white shadow-2xl border border-white/10 relative overflow-hidden">
+        <div class="bg-gradient-to-br from-[#0B1F3A] via-[#0e2749] to-[#071526] rounded-2xl sm:rounded-3xl p-4 sm:p-7 md:p-8 text-white shadow-2xl border border-white/10 relative overflow-hidden">
           <div class="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary-500/10 blur-3xl pointer-events-none"></div>
           <div class="absolute -left-16 -bottom-16 h-64 w-64 rounded-full bg-secondary-500/10 blur-3xl pointer-events-none"></div>
 
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-            <div>
-              <div class="flex flex-wrap items-center gap-3">
-                <span class="px-3 py-1 rounded-lg bg-white/10 text-primary-300 text-xs font-mono font-bold tracking-wider border border-white/10 flex items-center gap-1.5">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6 relative z-10">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span class="px-2.5 py-1 rounded-lg bg-white/10 text-primary-300 text-[10px] sm:text-xs font-mono font-bold tracking-wider border border-white/10 flex items-center gap-1.5">
                   <i class="fas fa-fingerprint"></i> CONSIGNMENT ID
                 </span>
-                <span id="resSecurityBadge" class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30 flex items-center gap-1.5">
-                  <i class="fas fa-shield-alt"></i> TAMPER-PROOF GPS SEAL VERIFIED
+                <span id="resStatusBadge" class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider border flex items-center gap-1.5 bg-sky-500/20 text-sky-300 border-sky-500/30">
+                  <span class="w-1.5 h-1.5 rounded-full animate-ping bg-sky-400"></span> In Transit
+                </span>
+                <span id="resSecurityBadge" class="hidden sm:inline-flex px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-[10px] sm:text-xs font-bold border border-emerald-500/30 items-center gap-1.5">
+                  <i class="fas fa-shield-alt"></i> TAMPER-PROOF GPS SEAL
                 </span>
               </div>
-              <div class="flex items-center gap-3 mt-3">
-                <h1 id="resTrackingNumber" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-mono">--</h1>
-                <button type="button" onclick="copyTrackingNumber()" title="Copy Tracking Number" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-all text-sm">
+              
+              <!-- Tracking Number with Responsive Copy Button -->
+              <div class="flex items-center gap-2 sm:gap-3 mt-3">
+                <h1 id="resTrackingNumber" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight font-mono break-all">--</h1>
+                <button type="button" onclick="copyTrackingNumber()" title="Copy Tracking Number" class="flex-shrink-0 p-2 sm:p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-all text-xs sm:text-sm active:scale-90">
                   <i class="fas fa-copy" id="copyIcon"></i>
                 </button>
               </div>
-              <p class="text-xs sm:text-sm text-slate-300 mt-1 flex items-center gap-2">
-                <span>Carrier: <strong id="resCarrier" class="text-white">Express Cargo Global</strong></span>
-                <span class="text-slate-500">•</span>
-                <span>Service: <strong id="resServiceType" class="text-amber-400">Air Express</strong></span>
-              </p>
+
+              <!-- Carrier & Service Type -->
+              <div class="text-xs sm:text-sm text-slate-300 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>Carrier: <strong id="resCarrier" class="text-white font-semibold">Express Cargo Global</strong></span>
+                <span class="text-slate-500 hidden sm:inline">•</span>
+                <span>Service: <strong id="resServiceType" class="text-amber-400 font-semibold">Air Express</strong></span>
+                <span class="text-slate-500 hidden sm:inline">•</span>
+                <span id="resSubstatus" class="text-sky-300 font-medium text-xs">--</span>
+              </div>
             </div>
 
-            <!-- Header Action Buttons -->
-            <div class="flex flex-wrap items-center gap-3">
-              <button type="button" onclick="openPrintWaybill()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-bold text-white backdrop-blur-sm transition-all hover:-translate-y-0.5 shadow-lg">
+            <!-- Header Action Buttons (Grid on mobile, flex on desktop) -->
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3 pt-2 lg:pt-0 border-t border-white/10 lg:border-t-0">
+              <button type="button" onclick="openPrintWaybill()" class="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-[11px] sm:text-xs font-bold text-white backdrop-blur-sm transition-all active:scale-95 shadow-lg text-center">
                 <i class="fas fa-print text-primary-400"></i>
-                <span>Print Official Waybill</span>
+                <span>Print Waybill</span>
               </button>
-              <button type="button" onclick="scrollToEmailSubscribe()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-secondary-500 to-amber-600 hover:from-secondary-600 hover:to-amber-700 text-xs font-bold text-white transition-all hover:-translate-y-0.5 shadow-lg shadow-secondary-500/20">
+              <button type="button" onclick="scrollToEmailSubscribe()" class="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl bg-gradient-to-r from-secondary-500 to-amber-600 hover:from-secondary-600 hover:to-amber-700 text-[11px] sm:text-xs font-bold text-white transition-all active:scale-95 shadow-lg shadow-secondary-500/20 text-center">
                 <i class="fas fa-bell"></i>
-                <span>Get Email Alerts</span>
+                <span>Email Alerts</span>
               </button>
             </div>
           </div>
 
           <!-- 6-Stage Progress Stepper -->
-          <div class="mt-8 pt-8 border-t border-white/10">
-            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
-              <span>Consignment Lifecycle Status</span>
-              <span id="resProgressText" class="text-secondary-400 text-sm font-extrabold">0% Complete</span>
+          <div class="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-white/10">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 sm:mb-4">
+              <span class="flex items-center gap-1.5">
+                <i class="fas fa-tasks text-secondary-400"></i> Consignment Lifecycle
+              </span>
+              <span id="resProgressText" class="text-secondary-400 text-xs sm:text-sm font-extrabold">0% Complete</span>
             </div>
 
-            <!-- Stepper Indicators Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="stepperContainer">
+            <!-- Stepper Indicators Grid (2 cols on small mobile, 3 cols on tablet, 6 cols on desktop) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3" id="stepperContainer">
               <!-- Step 1 -->
-              <div id="step-1" class="p-3 rounded-2xl bg-white/5 border border-white/10 transition-all">
+              <div id="step-1" class="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 transition-all">
                 <div class="flex items-center gap-2">
-                  <span class="step-dot h-6 w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">1</span>
+                  <span class="step-dot h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">1</span>
                   <span class="text-[11px] font-bold text-slate-300">Booked</span>
                 </div>
-                <span class="step-sub text-[10px] text-slate-500 block mt-1">Manifest Issued</span>
+                <span class="step-sub text-[9px] sm:text-[10px] text-slate-500 block mt-1 truncate">Manifest Issued</span>
               </div>
               <!-- Step 2 -->
-              <div id="step-2" class="p-3 rounded-2xl bg-white/5 border border-white/10 transition-all">
+              <div id="step-2" class="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 transition-all">
                 <div class="flex items-center gap-2">
-                  <span class="step-dot h-6 w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">2</span>
+                  <span class="step-dot h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">2</span>
                   <span class="text-[11px] font-bold text-slate-300">Hub Intake</span>
                 </div>
-                <span class="step-sub text-[10px] text-slate-500 block mt-1">Sorted &amp; Sealed</span>
+                <span class="step-sub text-[9px] sm:text-[10px] text-slate-500 block mt-1 truncate">Sorted &amp; Sealed</span>
               </div>
               <!-- Step 3 -->
-              <div id="step-3" class="p-3 rounded-2xl bg-white/5 border border-white/10 transition-all">
+              <div id="step-3" class="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 transition-all">
                 <div class="flex items-center gap-2">
-                  <span class="step-dot h-6 w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">3</span>
+                  <span class="step-dot h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">3</span>
                   <span class="text-[11px] font-bold text-slate-300">In Transit</span>
                 </div>
-                <span class="step-sub text-[10px] text-slate-500 block mt-1">Global Air/Sea</span>
+                <span class="step-sub text-[9px] sm:text-[10px] text-slate-500 block mt-1 truncate">Global Air/Sea</span>
               </div>
               <!-- Step 4 -->
-              <div id="step-4" class="p-3 rounded-2xl bg-white/5 border border-white/10 transition-all">
+              <div id="step-4" class="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 transition-all">
                 <div class="flex items-center gap-2">
-                  <span class="step-dot h-6 w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">4</span>
+                  <span class="step-dot h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">4</span>
                   <span class="text-[11px] font-bold text-slate-300">Customs</span>
                 </div>
-                <span class="step-sub text-[10px] text-slate-500 block mt-1">Clearance</span>
+                <span class="step-sub text-[9px] sm:text-[10px] text-slate-500 block mt-1 truncate">Clearance Hub</span>
               </div>
               <!-- Step 5 -->
-              <div id="step-5" class="p-3 rounded-2xl bg-white/5 border border-white/10 transition-all">
+              <div id="step-5" class="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 transition-all">
                 <div class="flex items-center gap-2">
-                  <span class="step-dot h-6 w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">5</span>
+                  <span class="step-dot h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">5</span>
                   <span class="text-[11px] font-bold text-slate-300">Out for Deliv.</span>
                 </div>
-                <span class="step-sub text-[10px] text-slate-500 block mt-1">Final Courier</span>
+                <span class="step-sub text-[9px] sm:text-[10px] text-slate-500 block mt-1 truncate">Final Courier</span>
               </div>
               <!-- Step 6 -->
-              <div id="step-6" class="p-3 rounded-2xl bg-white/5 border border-white/10 transition-all">
+              <div id="step-6" class="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 transition-all">
                 <div class="flex items-center gap-2">
-                  <span class="step-dot h-6 w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">6</span>
+                  <span class="step-dot h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-white/10 text-slate-400 flex items-center justify-center text-[10px] font-bold">6</span>
                   <span class="text-[11px] font-bold text-slate-300">Delivered</span>
                 </div>
-                <span class="step-sub text-[10px] text-slate-500 block mt-1">Signed &amp; Closed</span>
+                <span class="step-sub text-[9px] sm:text-[10px] text-slate-500 block mt-1 truncate">Signed &amp; Closed</span>
               </div>
             </div>
 
             <!-- Linear Progress Bar -->
-            <div class="w-full bg-black/40 rounded-full h-2.5 overflow-hidden mt-4 border border-white/10">
-              <div id="resProgressBar" class="bg-gradient-to-r from-primary-500 via-sky-400 to-secondary-500 h-2.5 rounded-full transition-all duration-1000 ease-out shadow-lg" style="width: 0%"></div>
+            <div class="w-full bg-black/40 rounded-full h-2 sm:h-2.5 overflow-hidden mt-3 sm:mt-4 border border-white/10">
+              <div id="resProgressBar" class="bg-gradient-to-r from-primary-500 via-sky-400 to-secondary-500 h-full rounded-full transition-all duration-1000 ease-out shadow-lg" style="width: 0%"></div>
             </div>
           </div>
         </div>
 
         <!-- Real-Time Luxury Logistics Flight Map & Live GPS Corridor -->
-        <div class="bg-[#0B1F3A] rounded-3xl border border-white/10 overflow-hidden shadow-2xl relative">
+        <div class="bg-[#0B1F3A] rounded-2xl sm:rounded-3xl border border-white/10 overflow-hidden shadow-2xl relative">
           <!-- Top Telemetry & Controls Bar -->
-          <div class="p-5 sm:p-6 bg-[#071326] border-b border-white/10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <span class="relative flex h-4 w-4">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#0B1F3A]"></span>
-              </span>
-              <div>
-                <div class="flex items-center gap-2">
-                  <h3 class="font-extrabold text-white text-base sm:text-lg tracking-wide flex items-center gap-2">
-                    <i class="fas fa-globe-americas text-primary-400"></i> Live Freight &amp; Route Telemetry
-                  </h3>
-                  <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">GPS REAL-TIME LOCK</span>
+          <div class="p-4 sm:p-6 bg-[#071326] border-b border-white/10 flex flex-col gap-3 sm:gap-4">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <span class="relative flex h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 bg-emerald-500 border-2 border-[#0B1F3A]"></span>
+                </span>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="font-extrabold text-white text-sm sm:text-lg tracking-wide flex items-center gap-2 truncate">
+                      <i class="fas fa-globe-americas text-primary-400"></i> Route &amp; GPS Telemetry
+                    </h3>
+                    <span class="px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">REAL-TIME LOCK</span>
+                  </div>
+                  <p id="resCurrentCoordsLabel" class="text-[11px] sm:text-xs text-slate-300 font-mono mt-0.5 truncate">Acquiring verified location telemetry...</p>
                 </div>
-                <p id="resCurrentCoordsLabel" class="text-xs text-slate-300 font-mono mt-1">Acquiring verified location telemetry...</p>
               </div>
+
+              <!-- Center Route Button for Quick Tap -->
+              <button type="button" onclick="centerMapOnLive()" class="sm:hidden px-2.5 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 text-[11px] font-bold border border-sky-500/30 flex items-center gap-1 active:scale-95 flex-shrink-0">
+                <i class="fas fa-crosshairs text-amber-400"></i> Reset
+              </button>
             </div>
 
-            <!-- Map Mode Selector & Action Controls -->
-            <div class="flex flex-wrap items-center gap-2">
-              <div class="inline-flex rounded-xl bg-slate-900/90 p-1 border border-white/10 text-xs font-semibold text-slate-300">
-                <button type="button" onclick="setMapTheme('osm')" id="themeBtn_osm" class="px-3 py-1.5 rounded-lg bg-sky-600 text-white shadow font-bold transition-all">
-                  <i class="fas fa-map mr-1"></i> Street Map
+            <!-- Map Mode Selector Controls (Horizontal Scroll on Small Mobile) -->
+            <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-1">
+              <div class="inline-flex rounded-xl bg-slate-900/90 p-1 border border-white/10 text-[11px] sm:text-xs font-semibold text-slate-300 flex-shrink-0">
+                <button type="button" onclick="setMapTheme('osm')" id="themeBtn_osm" class="px-2.5 sm:px-3 py-1.5 rounded-lg bg-sky-600 text-white shadow font-bold transition-all">
+                  <i class="fas fa-map mr-1"></i> Street
                 </button>
-                <button type="button" onclick="setMapTheme('satellite')" id="themeBtn_satellite" class="px-3 py-1.5 rounded-lg hover:text-white transition-all text-slate-400">
+                <button type="button" onclick="setMapTheme('satellite')" id="themeBtn_satellite" class="px-2.5 sm:px-3 py-1.5 rounded-lg hover:text-white transition-all text-slate-400">
                   <i class="fas fa-satellite mr-1 text-emerald-400"></i> Satellite
                 </button>
-                <button type="button" onclick="setMapTheme('voyager')" id="themeBtn_voyager" class="px-3 py-1.5 rounded-lg hover:text-white transition-all text-slate-400">
+                <button type="button" onclick="setMapTheme('voyager')" id="themeBtn_voyager" class="px-2.5 sm:px-3 py-1.5 rounded-lg hover:text-white transition-all text-slate-400">
                   <i class="fas fa-compass mr-1 text-amber-400"></i> Terrain
                 </button>
-                <button type="button" onclick="setMapTheme('dark')" id="themeBtn_dark" class="px-3 py-1.5 rounded-lg hover:text-white transition-all text-slate-400">
-                  <i class="fas fa-moon mr-1"></i> Dark View
+                <button type="button" onclick="setMapTheme('dark')" id="themeBtn_dark" class="px-2.5 sm:px-3 py-1.5 rounded-lg hover:text-white transition-all text-slate-400">
+                  <i class="fas fa-moon mr-1"></i> Dark
                 </button>
               </div>
 
-              <button type="button" onclick="centerMapOnLive()" class="px-3.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-bold border border-sky-500/30 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+              <button type="button" onclick="centerMapOnLive()" class="hidden sm:flex px-3.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-bold border border-sky-500/30 shadow-sm transition-all items-center gap-1.5 cursor-pointer flex-shrink-0">
                 <i class="fas fa-crosshairs text-amber-400"></i> Center Route
               </button>
             </div>
           </div>
 
-          <!-- Exact Location Badges Banner -->
-          <div class="bg-slate-900/90 px-6 py-3 border-b border-white/10 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div class="flex items-center gap-2.5">
-              <span class="h-6 w-6 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center text-xs">
+          <!-- Exact Location Badges Banner (Stacked on mobile, 2-col on tablet/desktop) -->
+          <div class="bg-slate-900/90 px-4 sm:px-6 py-3 border-b border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 text-xs">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="h-6 w-6 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center text-xs flex-shrink-0">
                 <i class="fas fa-plane-departure"></i>
               </span>
-              <div>
-                <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Origin Departure Address</span>
-                <span id="mapOriginDisplay" class="font-bold text-white text-xs">--</span>
+              <div class="min-w-0">
+                <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Origin Departure</span>
+                <span id="mapOriginDisplay" class="font-bold text-white text-xs truncate block">--</span>
               </div>
             </div>
-            <div class="flex items-center gap-2.5">
-              <span class="h-6 w-6 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="h-6 w-6 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs flex-shrink-0">
                 <i class="fas fa-flag-checkered"></i>
               </span>
-              <div>
-                <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Destination Arrival Address</span>
-                <span id="mapDestDisplay" class="font-bold text-white text-xs">--</span>
+              <div class="min-w-0">
+                <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Destination Arrival</span>
+                <span id="mapDestDisplay" class="font-bold text-white text-xs truncate block">--</span>
               </div>
             </div>
           </div>
 
-          <!-- Map Stage Container -->
-          <div class="relative w-full h-[500px] sm:h-[580px] bg-[#071326] overflow-hidden">
+          <!-- Map Stage Container (Responsive Height for Touch Devices) -->
+          <div class="relative w-full h-[360px] sm:h-[480px] md:h-[560px] bg-[#071326] overflow-hidden">
             <div id="shipmentMap" class="w-full h-full z-10"></div>
 
             <!-- Clean Realistic Logistics Route Status Strip -->
-            <div class="absolute bottom-4 left-4 right-4 z-20 pointer-events-none bg-slate-950/90 backdrop-blur-md border border-white/15 rounded-2xl p-4 text-xs text-white shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div class="flex items-center gap-2.5">
-                <span class="h-3 w-3 rounded-full bg-emerald-400 animate-ping"></span>
-                <span class="text-white font-bold" id="mapLiveStatusText">Live In Transit</span>
+            <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-20 pointer-events-none bg-slate-950/90 backdrop-blur-md border border-white/15 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-xs text-white shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
+              <div class="flex items-center gap-2">
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
+                <span class="text-white font-bold text-[11px] sm:text-xs" id="mapLiveStatusText">Live In Transit</span>
               </div>
-              <div class="flex items-center gap-3 text-slate-300 font-medium text-xs">
-                <span id="routeOriginBadge" class="text-sky-300 font-bold bg-sky-500/20 px-2.5 py-1 rounded-lg border border-sky-500/30">Origin</span>
+              <div class="flex items-center gap-2 text-slate-300 font-medium text-[11px] sm:text-xs">
+                <span id="routeOriginBadge" class="text-sky-300 font-bold bg-sky-500/20 px-2 py-0.5 rounded-md border border-sky-500/30 truncate max-w-[120px]">Origin</span>
                 <span class="text-amber-400 font-bold">&rarr;</span>
-                <span id="routeDestBadge" class="text-emerald-300 font-bold bg-emerald-500/20 px-2.5 py-1 rounded-lg border border-emerald-500/30">Destination</span>
+                <span id="routeDestBadge" class="text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-md border border-emerald-500/30 truncate max-w-[120px]">Destination</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Telemetry & Consignment Intelligence Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Telemetry & Consignment Intelligence Cards (2 cols on mobile, 4 cols on desktop) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <!-- ETA Countdown -->
-          <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xl relative overflow-hidden">
-            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xl relative overflow-hidden">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
               <span>Estimated Delivery</span>
               <i class="fas fa-clock text-primary-500 text-base"></i>
             </div>
-            <div id="resETA" class="text-xl sm:text-2xl font-black text-[#0B1F3A] mt-2">--</div>
-            <div id="resETACountdown" class="mt-2 text-xs font-bold px-3 py-1.5 rounded-xl bg-primary-50 text-primary-700 border border-primary-100 inline-block">
+            <div id="resETA" class="text-lg sm:text-xl md:text-2xl font-black text-[#0B1F3A] mt-2 truncate">--</div>
+            <div id="resETACountdown" class="mt-2 text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-lg sm:rounded-xl bg-primary-50 text-primary-700 border border-primary-100 inline-block">
               <i class="fas fa-hourglass-half mr-1"></i> Calculating ETA...
             </div>
           </div>
 
           <!-- Origin Details -->
-          <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xl">
-            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
-              <span>Origin Hub (Departure)</span>
+          <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xl">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
+              <span>Origin Hub</span>
               <i class="fas fa-plane-departure text-sky-500 text-base"></i>
             </div>
-            <div id="resOriginCity" class="text-xl sm:text-2xl font-black text-[#0B1F3A] mt-2">--</div>
-            <span id="resOriginCountry" class="text-xs text-slate-500 font-medium block mt-1">--</span>
-            <span id="resSenderMasked" class="text-[11px] text-slate-400 block mt-2 pt-2 border-t border-slate-100 font-mono">Sender: --</span>
+            <div id="resOriginCity" class="text-lg sm:text-xl md:text-2xl font-black text-[#0B1F3A] mt-2 truncate">--</div>
+            <span id="resOriginCountry" class="text-xs text-slate-500 font-medium block mt-1 truncate">--</span>
+            <span id="resSenderMasked" class="text-[11px] text-slate-400 block mt-2 pt-2 border-t border-slate-100 font-mono truncate">Sender: --</span>
           </div>
 
           <!-- Destination Details -->
-          <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xl">
-            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
-              <span>Destination (Arrival)</span>
+          <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xl">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
+              <span>Destination</span>
               <i class="fas fa-plane-arrival text-emerald-500 text-base"></i>
             </div>
-            <div id="resDestCity" class="text-xl sm:text-2xl font-black text-[#0B1F3A] mt-2">--</div>
-            <span id="resDestCountry" class="text-xs text-slate-500 font-medium block mt-1">--</span>
-            <span id="resRecipientMasked" class="text-[11px] text-slate-400 block mt-2 pt-2 border-t border-slate-100 font-mono">Consignee: --</span>
+            <div id="resDestCity" class="text-lg sm:text-xl md:text-2xl font-black text-[#0B1F3A] mt-2 truncate">--</div>
+            <span id="resDestCountry" class="text-xs text-slate-500 font-medium block mt-1 truncate">--</span>
+            <span id="resRecipientMasked" class="text-[11px] text-slate-400 block mt-2 pt-2 border-t border-slate-100 font-mono truncate">Consignee: --</span>
           </div>
 
           <!-- Cargo Specs -->
-          <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xl">
-            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400">
-              <span>Cargo Specifications</span>
+          <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xl">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">
+              <span>Cargo Specs</span>
               <i class="fas fa-cube text-secondary-500 text-base"></i>
             </div>
-            <div id="resWeight" class="text-xl sm:text-2xl font-black text-[#0B1F3A] mt-2">--</div>
+            <div id="resWeight" class="text-lg sm:text-xl md:text-2xl font-black text-[#0B1F3A] mt-2 truncate">--</div>
             <div class="flex items-center justify-between text-xs text-slate-500 mt-1">
               <span id="resPieces">1 Piece(s)</span>
-              <span class="text-emerald-600 font-bold">Standard Secured</span>
+              <span class="text-emerald-600 font-bold">Secured Cargo</span>
             </div>
-            <span id="resPaymentStatus" class="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md inline-block mt-2 font-bold">PAID IN FULL</span>
+            <span id="resPaymentStatus" class="text-[10px] sm:text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md inline-block mt-2 font-bold">PAID IN FULL</span>
           </div>
         </div>
 
         <!-- 2-Column Section: Timeline + Email Alert Subscription -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           <!-- Milestone Activity Timeline (2 cols) -->
-          <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xl">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-5 mb-6">
-              <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-lg">
+          <div class="lg:col-span-2 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-8 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 sm:pb-5 mb-5 sm:mb-6">
+              <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="h-9 w-9 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center text-base sm:text-lg flex-shrink-0">
                   <i class="fas fa-route"></i>
                 </div>
                 <div>
-                  <h3 class="text-lg font-extrabold text-[#0B1F3A]">Milestone Audit &amp; Event Trail</h3>
-                  <p class="text-xs text-slate-500">Verified scanning logs from origin to final destination</p>
+                  <h3 class="text-base sm:text-lg font-extrabold text-[#0B1F3A]">Milestone Event Trail</h3>
+                  <p class="text-[11px] sm:text-xs text-slate-500">Verified checkpoints from origin to destination</p>
                 </div>
               </div>
-              <span class="text-xs font-bold text-slate-400 font-mono" id="timelineCount">0 Milestones</span>
+              <span class="text-[11px] sm:text-xs font-bold text-slate-400 font-mono" id="timelineCount">0 Milestones</span>
             </div>
 
-            <div id="resTimelineList" class="relative border-l-2 border-slate-200 ml-4 space-y-6">
+            <div id="resTimelineList" class="relative border-l-2 border-slate-200 ml-3 sm:ml-4 space-y-5 sm:space-y-6">
               <!-- Milestones injected dynamically -->
             </div>
           </div>
 
           <!-- Right Column: Email Subscription & Customer Support -->
-          <div class="space-y-6">
+          <div class="space-y-5 sm:space-y-6">
             <!-- Email Milestone Alerts Box -->
-            <div id="emailSubscribeCard" class="bg-gradient-to-br from-[#0B1F3A] to-[#122c50] text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-white/10 relative overflow-hidden">
-              <div class="h-10 w-10 rounded-2xl bg-secondary-500 text-white flex items-center justify-center text-lg mb-4 shadow-lg shadow-secondary-500/30">
+            <div id="emailSubscribeCard" class="bg-gradient-to-br from-[#0B1F3A] to-[#122c50] text-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-xl border border-white/10 relative overflow-hidden">
+              <div class="h-10 w-10 rounded-xl sm:rounded-2xl bg-secondary-500 text-white flex items-center justify-center text-base sm:text-lg mb-3 sm:mb-4 shadow-lg shadow-secondary-500/30">
                 <i class="fas fa-envelope-open-text"></i>
               </div>
-              <h4 class="text-lg font-bold text-white">Live Milestone Email Alerts</h4>
-              <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                Receive instant automated notifications whenever customs clears, transit milestones change, or your shipment is out for delivery.
+              <h4 class="text-base sm:text-lg font-bold text-white">Live Milestone Email Alerts</h4>
+              <p class="text-[11px] sm:text-xs text-slate-300 mt-1 leading-relaxed">
+                Receive instant automated notifications whenever customs clears, transit milestones change, or your shipment arrives.
               </p>
 
-              <form id="subscribeEmailForm" class="mt-5 space-y-3">
+              <form id="subscribeEmailForm" class="mt-4 sm:mt-5 space-y-3">
                 <div id="subscribeAlert" class="hidden p-3 rounded-xl text-xs font-medium"></div>
                 <div>
                   <input type="email" id="subscribeEmailInput" required placeholder="Enter your email address"
-                         class="w-full px-4 py-3 bg-slate-900/90 border border-white/20 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-secondary-500">
+                         class="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-slate-900/90 border border-white/20 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-secondary-500">
                 </div>
-                <button type="submit" id="btnSubscribeEmail" class="w-full py-3 px-4 bg-gradient-to-r from-secondary-500 to-amber-600 hover:from-secondary-600 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all hover:-translate-y-0.5 cursor-pointer">
-                  Activate Live Milestone Alerts
+                <button type="submit" id="btnSubscribeEmail" class="w-full py-2.5 sm:py-3 px-4 bg-gradient-to-r from-secondary-500 to-amber-600 hover:from-secondary-600 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all active:scale-95 cursor-pointer">
+                  Activate Milestone Alerts
                 </button>
               </form>
             </div>
 
             <!-- 24/7 Priority Logistics Assistance -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xl space-y-4">
-              <h4 class="text-base font-extrabold text-[#0B1F3A] flex items-center gap-2">
+            <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xl space-y-3 sm:space-y-4">
+              <h4 class="text-sm sm:text-base font-extrabold text-[#0B1F3A] flex items-center gap-2">
                 <i class="fas fa-headset text-primary-600"></i> Priority Cargo Assistance
               </h4>
-              <p class="text-xs text-slate-500 leading-relaxed">
-                Need urgent assistance or customs clearance coordination? Our 24/7 global dispatch controllers are standing by.
+              <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+                Need urgent assistance or customs clearance coordination? Global dispatch controllers are standing by 24/7.
               </p>
               <div class="space-y-2 pt-2 border-t border-slate-100 text-xs">
-                <a href="mailto:support@express-cargo.ltd" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold text-slate-700 transition-colors">
-                  <span class="flex items-center gap-2"><i class="fas fa-envelope text-primary-600"></i> support@express-cargo.ltd</span>
-                  <i class="fas fa-arrow-right text-slate-400"></i>
+                <a href="mailto:support@express-cargo.ltd" class="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold text-slate-700 transition-colors">
+                  <span class="flex items-center gap-2 truncate"><i class="fas fa-envelope text-primary-600 flex-shrink-0"></i> <span class="truncate">support@express-cargo.ltd</span></span>
+                  <i class="fas fa-arrow-right text-slate-400 flex-shrink-0 ml-1"></i>
                 </a>
-                <a href="contact.html" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold text-slate-700 transition-colors">
-                  <span class="flex items-center gap-2"><i class="fas fa-comments text-secondary-500"></i> Submit Dispatch Inquiry</span>
-                  <i class="fas fa-arrow-right text-slate-400"></i>
+                <a href="contact.html" class="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-slate-50 hover:bg-slate-100 font-semibold text-slate-700 transition-colors">
+                  <span class="flex items-center gap-2"><i class="fas fa-comments text-secondary-500 flex-shrink-0"></i> Submit Dispatch Inquiry</span>
+                  <i class="fas fa-arrow-right text-slate-400 flex-shrink-0 ml-1"></i>
                 </a>
               </div>
             </div>
@@ -903,77 +935,79 @@
     </div>
 
     <!-- Official Printable Waybill Modal -->
-    <div id="printableWaybillModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-white text-slate-900 w-full max-w-3xl rounded-3xl p-8 shadow-2xl border border-slate-200 space-y-6 my-8 font-sans">
+    <div id="printableWaybillModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+      <div class="bg-white text-slate-900 w-full max-w-3xl rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl border border-slate-200 space-y-5 sm:space-y-6 my-4 sm:my-8 font-sans">
         <!-- Waybill Header -->
-        <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-900 pb-4 gap-3">
           <div class="flex items-center gap-3">
-            <img src="images/logo-footer.png" alt="Express Cargo" class="h-10 w-auto">
+            <img src="images/logo-footer.png" alt="Express Cargo" class="h-8 sm:h-10 w-auto">
             <div>
-              <h2 class="text-xl font-extrabold tracking-tight uppercase text-[#0B1F3A]">Express Cargo Global</h2>
-              <span class="text-[10px] uppercase tracking-widest text-slate-500 font-mono">Official International Air &amp; Ocean Waybill</span>
+              <h2 class="text-lg sm:text-xl font-extrabold tracking-tight uppercase text-[#0B1F3A]">Express Cargo Global</h2>
+              <span class="text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-500 font-mono">Official International Air &amp; Ocean Waybill</span>
             </div>
           </div>
-          <div class="text-right">
-            <span class="text-xs font-bold text-slate-500 block uppercase">Waybill #</span>
-            <span id="wbTrackingNum" class="text-lg font-black font-mono text-primary-600">--</span>
+          <div class="sm:text-right">
+            <span class="text-[10px] sm:text-xs font-bold text-slate-500 block uppercase">Waybill #</span>
+            <span id="wbTrackingNum" class="text-base sm:text-lg font-black font-mono text-primary-600 break-all">--</span>
           </div>
         </div>
 
-        <!-- Waybill Body 2-col -->
-        <div class="grid grid-cols-2 gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
+        <!-- Waybill Body 2-col (Stacked on small mobile) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 p-3.5 sm:p-4 bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-200 text-xs">
           <div>
             <span class="font-bold text-slate-400 uppercase tracking-wider block text-[10px]">Shipper / Origin</span>
-            <div id="wbSender" class="font-bold text-slate-800 text-sm mt-1">--</div>
-            <div id="wbOriginAddress" class="text-slate-600 mt-0.5">--</div>
+            <div id="wbSender" class="font-bold text-slate-800 text-xs sm:text-sm mt-1">--</div>
+            <div id="wbOriginAddress" class="text-slate-600 mt-0.5 break-words">--</div>
           </div>
           <div>
             <span class="font-bold text-slate-400 uppercase tracking-wider block text-[10px]">Consignee / Destination</span>
-            <div id="wbRecipient" class="font-bold text-slate-800 text-sm mt-1">--</div>
-            <div id="wbDestAddress" class="text-slate-600 mt-0.5">--</div>
+            <div id="wbRecipient" class="font-bold text-slate-800 text-xs sm:text-sm mt-1">--</div>
+            <div id="wbDestAddress" class="text-slate-600 mt-0.5 break-words">--</div>
           </div>
         </div>
 
-        <!-- Waybill Specs -->
-        <table class="w-full text-xs text-left border border-slate-200 rounded-xl overflow-hidden">
-          <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px]">
-            <tr>
-              <th class="p-3">Service Tier</th>
-              <th class="p-3">Weight</th>
-              <th class="p-3">Pieces</th>
-              <th class="p-3">Security Seal</th>
-              <th class="p-3">Current Status</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200">
-            <tr>
-              <td id="wbService" class="p-3 font-semibold">Air Express</td>
-              <td id="wbWeight" class="p-3 font-semibold">--</td>
-              <td id="wbPieces" class="p-3">1</td>
-              <td class="p-3 font-mono font-bold text-emerald-600">VERIFIED</td>
-              <td id="wbStatus" class="p-3 font-bold text-primary-600 uppercase">--</td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Waybill Specs (Horizontal scroll wrapper for mobile) -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px]">
+              <tr>
+                <th class="p-2.5 sm:p-3 whitespace-nowrap">Service Tier</th>
+                <th class="p-2.5 sm:p-3 whitespace-nowrap">Weight</th>
+                <th class="p-2.5 sm:p-3 whitespace-nowrap">Pieces</th>
+                <th class="p-2.5 sm:p-3 whitespace-nowrap">Security Seal</th>
+                <th class="p-2.5 sm:p-3 whitespace-nowrap">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td id="wbService" class="p-2.5 sm:p-3 font-semibold whitespace-nowrap">Air Express</td>
+                <td id="wbWeight" class="p-2.5 sm:p-3 font-semibold whitespace-nowrap">--</td>
+                <td id="wbPieces" class="p-2.5 sm:p-3 whitespace-nowrap">1</td>
+                <td class="p-2.5 sm:p-3 font-mono font-bold text-emerald-600 whitespace-nowrap">VERIFIED</td>
+                <td id="wbStatus" class="p-2.5 sm:p-3 font-bold text-primary-600 uppercase whitespace-nowrap">--</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <!-- Waybill Footer / Signature -->
-        <div class="grid grid-cols-2 gap-6 pt-4 border-t border-slate-200 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-3 sm:pt-4 border-t border-slate-200 text-xs">
           <div>
             <span class="text-[10px] text-slate-400 uppercase font-bold block">Carrier Authorization</span>
-            <div class="h-12 border-b border-dashed border-slate-400 mt-2 flex items-end">
-              <span class="font-serif italic text-slate-600 text-sm">Express Cargo Dispatch Hub</span>
+            <div class="h-10 sm:h-12 border-b border-dashed border-slate-400 mt-1 sm:mt-2 flex items-end">
+              <span class="font-serif italic text-slate-600 text-xs sm:text-sm">Express Cargo Dispatch Hub</span>
             </div>
           </div>
           <div>
             <span class="text-[10px] text-slate-400 uppercase font-bold block">Consignee Acceptance</span>
-            <div class="h-12 border-b border-dashed border-slate-400 mt-2"></div>
+            <div class="h-10 sm:h-12 border-b border-dashed border-slate-400 mt-1 sm:mt-2"></div>
           </div>
         </div>
 
-        <div class="flex justify-end gap-3 pt-4 no-print">
-          <button type="button" onclick="document.getElementById('printableWaybillModal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">Close</button>
-          <button type="button" onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-primary-600 text-white text-xs font-bold shadow-lg shadow-primary-600/30 cursor-pointer">
-            <i class="fas fa-print mr-2"></i> Print Document
+        <div class="flex justify-end gap-2.5 sm:gap-3 pt-3 sm:pt-4 no-print">
+          <button type="button" onclick="document.getElementById('printableWaybillModal').classList.add('hidden')" class="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold cursor-pointer transition-colors">Close</button>
+          <button type="button" onclick="window.print()" class="px-5 sm:px-6 py-2 sm:py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold shadow-lg shadow-primary-600/30 cursor-pointer transition-colors">
+            <i class="fas fa-print mr-1.5 sm:mr-2"></i> Print
           </button>
         </div>
       </div>
